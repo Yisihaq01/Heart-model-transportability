@@ -66,7 +66,7 @@ Apply post-hoc calibration (Platt scaling, isotonic regression), lightweight upd
 
 ### Dataset B — UCI Heart Disease (Multi-Site)
 
-Four cohorts sharing a common 14-attribute schema: **Cleveland**, **Hungary**, **Switzerland**, **VA Long Beach**. The `num` field (0–4) is binarized to 0 vs 1–4 for presence.
+Four cohorts sharing a common 14-attribute schema: **Cleveland** (processed 14-col format), **Hungary**, **Switzerland**, **VA Long Beach**. The `num` field (0–4) is binarized to 0 vs 1–4 for presence.
 
 | Column | Role |
 |---|---|
@@ -100,7 +100,7 @@ Four cohorts sharing a common 14-attribute schema: **Cleveland**, **Hungary**, *
 ## Techniques
 
 - **Modeling:** Logistic Regression (regularized), Random Forest, Gradient Boosting (XGBoost/LightGBM)
-- **Calibration:** Reliability diagrams, Brier score, Platt scaling, isotonic regression
+- **Calibration:** Reliability diagrams, Brier score, Platt scaling, isotonic regression, temperature scaling
 - **External validation:** Internal 80/20 baselines + multi-site external validation matrix
 - **Shift diagnostics:** Feature distribution comparisons, drift flags, prevalence differences
 - **Reporting:** TRIPOD+AI for completeness, PROBAST+AI for bias risk assessment
@@ -111,19 +111,25 @@ Four cohorts sharing a common 14-attribute schema: **Cleveland**, **Hungary**, *
 Heart-model-transportability/
 ├── Dataset/                  # Raw data files
 │   ├── kaggle_cardio_train.csv
+│   ├── processed.cleveland.data
 │   ├── long-beach-va.data
 │   ├── hungarian.data
 │   └── switzerland.data
-├── data/                     # Cleaned / processed datasets
-├── src/                      # Loading, cleaning, modeling, calibration, drift, evaluation
-├── configs/                  # Run configs: site pairs, models, seeds
-├── outputs/                  # Tables, plots, saved models
-├── reports/                  # Markdown/HTML evaluation report (TRIPOD+AI aligned)
-├── app/                      # Transportability Dashboard (Streamlit/Dash)
+├── data/                     # Cleaned / processed datasets + ingestion_report.json
 ├── ImplementationPlan/       # Pipeline, evaluation, and data ingestion plans
+│   ├── data_ingestion.md
+│   ├── pipeline_plan.md
+│   ├── eval_plan.md
+│   └── pipeline_outputs.md
+├── Test/                     # Pytest suite (ingestion, pipeline, structure)
 ├── Literature/               # Reference papers
 ├── Research Paper/           # Manuscript drafts
-├── requirements.txt
+├── src/                      # Loading, cleaning, modeling, calibration, drift, evaluation (planned)
+├── configs/                  # Run configs: site pairs, models, seeds (planned)
+├── outputs/                  # Tables, plots, saved models (planned)
+├── reports/                  # Markdown/HTML evaluation report — TRIPOD+AI aligned (planned)
+├── app/                      # Transportability Dashboard — Streamlit/Dash (planned)
+├── requirements.txt          # (planned)
 └── README.md
 ```
 
