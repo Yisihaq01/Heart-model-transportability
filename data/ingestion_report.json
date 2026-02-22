@@ -1,18 +1,19 @@
 {
-  "generated_at": "2026-02-22T16:12:58.000721",
+  "generated_at": "2026-02-22T17:07:46.273668",
   "sites": {
     "kaggle": {
-      "n_records": 70000,
+      "n_records": 68726,
       "n_features": 12,
       "target_col": "target",
-      "prevalence": 0.5,
+      "prevalence": 0.495,
       "missing_rates": {},
       "source_file": "kaggle_cardio_train.csv",
-      "bp_outliers_flagged": 1322
+      "bp_outliers_flagged": 48,
+      "bp_outliers_dropped": 1274
     },
     "cleveland": {
       "n_records": 303,
-      "n_features": 14,
+      "n_features": 15,
       "target_col": "target",
       "prevalence": 0.459,
       "missing_rates": {
@@ -23,7 +24,7 @@
     },
     "hungary": {
       "n_records": 294,
-      "n_features": 14,
+      "n_features": 15,
       "target_col": "target",
       "prevalence": 0.361,
       "missing_rates": {
@@ -35,13 +36,14 @@
         "exang": 0.3,
         "slope": 64.6,
         "ca": 98.6,
-        "thal": 100.0
+        "thal": 100.0,
+        "sys_bp": 0.3
       },
       "source_file": "hungarian.data"
     },
     "switzerland": {
       "n_records": 123,
-      "n_features": 14,
+      "n_features": 15,
       "target_col": "target",
       "prevalence": 0.935,
       "missing_rates": {
@@ -54,13 +56,14 @@
         "oldpeak": 4.9,
         "slope": 13.8,
         "ca": 95.9,
-        "thal": 100.0
+        "thal": 100.0,
+        "sys_bp": 1.6
       },
       "source_file": "switzerland.data"
     },
     "va": {
       "n_records": 200,
-      "n_features": 14,
+      "n_features": 15,
       "target_col": "target",
       "prevalence": 0.745,
       "missing_rates": {
@@ -73,7 +76,8 @@
         "oldpeak": 28.0,
         "slope": 50.5,
         "ca": 99.0,
-        "thal": 100.0
+        "thal": 100.0,
+        "sys_bp": 28.0
       },
       "source_file": "long-beach-va.data"
     }

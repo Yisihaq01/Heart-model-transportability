@@ -1,0 +1,29 @@
+# configs/data_ingestion.yaml
+raw_dir: Dataset
+clean_dir: data
+
+sites:
+  kaggle:
+    file: kaggle_cardio_train.csv
+    format: csv_semicolon
+    target_col: cardio
+  cleveland:
+    file: processed.cleveland.data
+    format: processed_14col
+    target_col: num
+  hungary:
+    file: hungarian.data
+    format: uci_long_76
+    target_col: num
+  switzerland:
+    file: switzerland.data
+    format: uci_long_76
+    target_col: num
+  va:
+    file: long-beach-va.data
+    format: uci_long_76
+    target_col: num
+
+cfs:
+  kaggle_uci: [age, sex, sys_bp]
+  uci_cross_site: [age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak]
