@@ -1,3 +1,4 @@
+
 # Pipeline Plan — ML Transportability / External Validation
 
 **Scope:** Everything between ingested clean data and final evaluation. Preprocessing, model training, internal validation, external validation matrix, calibration, shift diagnostics, and artifact persistence. Final evaluation reporting is **out of scope** (covered separately in `eval_plan.md`).
@@ -205,9 +206,11 @@ def tune_model(model_key: str, X_train, y_train, n_samples: int):
 |---|---|---|---|
 | Kaggle | 70,000 | Single 80/20 stratified split | Large N → single split is stable |
 | Cleveland | 303 | 80/20 split + bootstrap (B=200) | Moderate N → bootstrap CIs for metric stability |
-| Hungary | 294 | 80/20 split + bootstrap (B=200) | Same |
-| VA | 200 | 80/20 split + bootstrap (B=200) | Small N → need CIs |
-| Switzerland | 123 | 5×5 Repeated Stratified CV | Very small N → no hold-out; full CV |
+| Hungary | 294 | 80/20 split + bootstrap (B=500) | Small test N (<200 after split) → more bootstrap iters |
+| VA | 200 | 80/20 split + bootstrap (B=500) | Small test N (<200 after split) → more bootstrap iters |
+| Switzerland | 123 | 5×5 Repeated Stratified CV + bootstrap (B=500) | Very small N → full CV; B=500 per fold |
+
+> **Bootstrap B selection:** B is chosen dynamically per fold — B=200 when the held-out test set has ≥200 samples, B=500 otherwise (matching `bootstrap_iters_small` in `configs/pipeline.yaml`).
 
 ```python
 # src/validation.py
@@ -247,10 +250,13 @@ def bootstrap_metric(y_true, y_pred, metric_fn, B=200, seed=42):
 
 For every site × model combination:
 
+> **Feature filtering:** The nominal "full-feature set" from `resolve_features(site, site, config)` is further restricted to columns that (a) exist in the site's clean parquet and (b) have at least one non-NaN value. This silently drops attributes that are 100% missing at a given site (e.g. `thal` in Hungary/VA, `chol` in Switzerland) so that imputers and encoders never receive a wholly-empty column. The effective per-site feature list is logged in each experiment's `results.json`.
+
 ```
 for site in [kaggle, cleveland, hungary, va, switzerland]:
     df = load_clean(site)
     features = resolve_features(site, site, config)  # full-feature set
+    features = [c for c in features if c in df.columns and df[c].notna().any()]
     splits = internal_split(df, site)
 
     for model_key in [lr, rf, xgb, lgbm]:
