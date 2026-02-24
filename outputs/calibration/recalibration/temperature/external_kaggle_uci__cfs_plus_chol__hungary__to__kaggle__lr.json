@@ -1,0 +1,60 @@
+{
+  "experiment_type": "external_kaggle_uci",
+  "model": "lr",
+  "method": "temperature",
+  "split_mode": "holdout",
+  "n_calibration": 34363,
+  "n_evaluation": 34363,
+  "metrics_before": {
+    "brier_score": 0.2673207362612846,
+    "ece": 0.14367520780808296,
+    "mce": 0.14367520780808296,
+    "bin_details": [
+      {
+        "lo": 0.30000000000000004,
+        "hi": 0.4,
+        "acc": 0.4941070337281378,
+        "conf": 0.35043182592005484,
+        "n": 34363
+      }
+    ],
+    "calibration_curve": {
+      "fraction_pos": [
+        0.4941070337281378
+      ],
+      "mean_predicted": [
+        0.35043182592005334
+      ]
+    }
+  },
+  "metrics_after": {
+    "brier_score": 0.2496768109236729,
+    "ece": 0.011253703806581028,
+    "mce": 0.011253703806581028,
+    "bin_details": [
+      {
+        "lo": 0.4,
+        "hi": 0.5,
+        "acc": 0.4941070337281378,
+        "conf": 0.4828533299215568,
+        "n": 34363
+      }
+    ],
+    "calibration_curve": {
+      "fraction_pos": [
+        0.4941070337281378
+      ],
+      "mean_predicted": [
+        0.4828533299215495
+      ]
+    }
+  },
+  "improvement": {
+    "brier_delta": 0.01764392533761172,
+    "ece_delta": 0.13242150400150193,
+    "mce_delta": 0.13242150400150193
+  },
+  "train_site": "hungary",
+  "test_site": "kaggle",
+  "variant": "cfs_plus_chol"
+}
