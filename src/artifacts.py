@@ -47,5 +47,7 @@ def save_experiment(result: dict, base_dir: str | Path = "outputs") -> Path:
             joblib.dump(result["fitted_model"], path / "model.joblib")
         if "fitted_pipeline" in result:
             joblib.dump(result["fitted_pipeline"], path / "pipeline.joblib")
+    elif exp_type == "external_uci" and "fitted_model" in result:
+        joblib.dump(result["fitted_model"], path / "model.joblib")
 
     return path
