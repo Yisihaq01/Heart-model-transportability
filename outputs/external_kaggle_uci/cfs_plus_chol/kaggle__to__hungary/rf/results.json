@@ -1,0 +1,71 @@
+{
+  "experiment_type": "external_kaggle_uci",
+  "variant": "cfs_plus_chol",
+  "train_site": "kaggle",
+  "test_site": "hungary",
+  "model": "rf",
+  "features_used": [
+    "age",
+    "sex",
+    "sys_bp",
+    "cholesterol"
+  ],
+  "include_cholesterol": true,
+  "n_train": 68726,
+  "n_test": 294,
+  "best_params": {
+    "max_depth": 5,
+    "min_samples_leaf": 10
+  },
+  "metrics": {
+    "roc_auc": 0.6189281413087113,
+    "pr_auc": 0.5040838031271193,
+    "brier_score": 0.30849478373570954,
+    "accuracy": 0.5,
+    "f1": 0.5242718446601942,
+    "precision": 0.39901477832512317,
+    "recall": 0.7641509433962265,
+    "specificity": 0.35106382978723405,
+    "confusion_matrix": [
+      [
+        66,
+        122
+      ],
+      [
+        25,
+        81
+      ]
+    ],
+    "n_test": 294,
+    "prevalence": 0.36054421768707484,
+    "ece": 0.2698787737779688,
+    "mce": 0.43722699533228365
+  },
+  "bootstrap_cis": {
+    "roc_auc": {
+      "point": 0.6189281413087113,
+      "ci_lower": 0.5483741620912402,
+      "ci_upper": 0.6944775519188666
+    },
+    "pr_auc": {
+      "point": 0.5040838031271193,
+      "ci_lower": 0.4128390901879275,
+      "ci_upper": 0.6081920905757914
+    },
+    "brier_score": {
+      "point": 0.30849478373570954,
+      "ci_lower": 0.28034678358001375,
+      "ci_upper": 0.33651717189492364
+    },
+    "accuracy": {
+      "point": 0.5,
+      "ci_lower": 0.4471938775510204,
+      "ci_upper": 0.5578231292517006
+    },
+    "ece": {
+      "point": 0.2698787737779688,
+      "ci_lower": 0.22528224260139398,
+      "ci_upper": 0.32945209899994404
+    }
+  }
+}

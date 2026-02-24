@@ -18,15 +18,18 @@ def save_experiment(result: dict, base_dir: str | Path = "outputs") -> Path:
     """
     base_dir = Path(base_dir)
     exp_type = result["experiment_type"]
+    variant = result.get("variant")
 
     if exp_type == "internal":
         path = base_dir / "internal" / result["site"] / result["model"]
+    elif exp_type == "internal_cfs":
+        path = base_dir / "internal_cfs" / (variant or "cfs") / result["site"] / result["model"]
     elif exp_type == "external_uci":
         train_sites = result["train_sites"]
         train_key = "+".join(sorted(train_sites)) if isinstance(train_sites, list) else train_sites
         path = base_dir / "external_uci" / f"{train_key}__to__{result['test_site']}" / result["model"]
     elif exp_type == "external_kaggle_uci":
-        path = base_dir / "external_kaggle_uci" / f"{result['train_site']}__to__{result['test_site']}" / result["model"]
+        path = base_dir / "external_kaggle_uci" / (variant or "cfs") / f"{result['train_site']}__to__{result['test_site']}" / result["model"]
     else:
         path = base_dir / exp_type / result.get("id", "default")
 
@@ -42,12 +45,15 @@ def save_experiment(result: dict, base_dir: str | Path = "outputs") -> Path:
         pred_df.to_parquet(path / "predictions.parquet", index=False)
         pred_df.to_csv(path / "predictions.csv", index=False)
 
-    if exp_type == "internal":
+    if exp_type in ("internal", "internal_cfs"):
         if "fitted_model" in result:
             joblib.dump(result["fitted_model"], path / "model.joblib")
         if "fitted_pipeline" in result:
             joblib.dump(result["fitted_pipeline"], path / "pipeline.joblib")
-    elif exp_type == "external_uci" and "fitted_model" in result:
-        joblib.dump(result["fitted_model"], path / "model.joblib")
+    elif exp_type in ("external_uci", "external_kaggle_uci"):
+        if "fitted_model" in result:
+            joblib.dump(result["fitted_model"], path / "model.joblib")
+        if "fitted_pipeline" in result:
+            joblib.dump(result["fitted_pipeline"], path / "pipeline.joblib")
 
     return path

@@ -3,9 +3,13 @@ Stage 1.2 — Model Definitions.
 Model registry, default params, tuning grids, and tune_model() for internal/external validation.
 """
 
+from __future__ import annotations
+
+from math import prod
+
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import GridSearchCV, RepeatedStratifiedKFold, StratifiedKFold
+from sklearn.model_selection import GridSearchCV, RandomizedSearchCV, RepeatedStratifiedKFold, StratifiedKFold
 from xgboost import XGBClassifier
 from lightgbm import LGBMClassifier
 
@@ -90,13 +94,31 @@ def tune_model(model_key: str, X_train, y_train, n_samples: int):
         else StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
     )
 
-    search = GridSearchCV(
-        base_model,
-        entry["tuning_grid"],
-        scoring="roc_auc",
-        cv=cv,
-        n_jobs=-1,
-        refit=True,
-    )
+    grid = entry["tuning_grid"]
+    # For boosted models, full grid search is expensive; use bounded randomized search (per pipeline_plan.md).
+    use_random = model_key in ("xgb", "lgbm")
+    if use_random:
+        # Upper-bound iterations by number of unique combinations in the grid.
+        n_candidates = int(prod(len(v) for v in grid.values())) if grid else 1
+        n_iter = min(20, n_candidates)
+        search = RandomizedSearchCV(
+            base_model,
+            param_distributions=grid,
+            n_iter=n_iter,
+            scoring="roc_auc",
+            cv=cv,
+            n_jobs=-1,
+            refit=True,
+            random_state=42,
+        )
+    else:
+        search = GridSearchCV(
+            base_model,
+            grid,
+            scoring="roc_auc",
+            cv=cv,
+            n_jobs=-1,
+            refit=True,
+        )
     search.fit(X_train, y_train)
     return search.best_estimator_, search.best_params_, search.cv_results_
