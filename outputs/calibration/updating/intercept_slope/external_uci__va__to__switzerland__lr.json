@@ -1,0 +1,71 @@
+{
+  "experiment_type": "external_uci",
+  "model": "lr",
+  "variant": "intercept_slope",
+  "split_mode": "holdout",
+  "n_calibration": 61,
+  "n_evaluation": 62,
+  "metrics_before": {
+    "brier_score": 0.10484398347564149,
+    "ece": 0.17914414941096124,
+    "mce": 0.17914414941096124,
+    "bin_details": [
+      {
+        "lo": 0.7000000000000001,
+        "hi": 0.8,
+        "acc": 0.9193548387096774,
+        "conf": 0.7402106892987161,
+        "n": 62
+      }
+    ],
+    "calibration_curve": {
+      "fraction_pos": [
+        0.9193548387096774
+      ],
+      "mean_predicted": [
+        0.740210689298716
+      ]
+    }
+  },
+  "metrics_after": {
+    "brier_score": 0.07504223939820504,
+    "ece": 0.0314184444199237,
+    "mce": 0.0314184444199237,
+    "bin_details": [
+      {
+        "lo": 0.9,
+        "hi": 1.0,
+        "acc": 0.9193548387096774,
+        "conf": 0.9507732831296011,
+        "n": 62
+      }
+    ],
+    "calibration_curve": {
+      "fraction_pos": [
+        0.9193548387096774
+      ],
+      "mean_predicted": [
+        0.9507732831296009
+      ]
+    }
+  },
+  "improvement": {
+    "brier_delta": 0.02980174407743645,
+    "ece_delta": 0.14772570499103754,
+    "mce_delta": 0.14772570499103754
+  },
+  "per_fold_params": [
+    {
+      "intercept": 2.704398598542273,
+      "slope": 0.2448459079799744
+    }
+  ],
+  "mean_params": {
+    "intercept": 2.704398598542273,
+    "slope": 0.2448459079799744
+  },
+  "train_sites": [
+    "va"
+  ],
+  "test_site": "switzerland"
+}

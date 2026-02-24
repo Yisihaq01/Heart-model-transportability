@@ -567,6 +567,229 @@ def run_recalibration(
     return all_results
 
 
+# ---------------------------------------------------------------------------
+# Stage 2.3 — Lightweight Updating: Intercept & Slope Recalibration (RQ4)
+# ---------------------------------------------------------------------------
+
+
+def logistic_recalibration(
+    y_prob_raw: np.ndarray,
+    y_true_cal: np.ndarray,
+    intercept_only: bool = False,
+) -> Dict[str, float]:
+    """
+    Stage 2.3.1: Fit logistic recalibration model on calibration data.
+
+    logit(p_updated) = a + b * logit(p_original)
+
+    - intercept_only=True  -> b fixed at 1 (prevalence-only correction)
+    - intercept_only=False -> both a and b free
+    """
+    y_prob_raw = np.asarray(y_prob_raw)
+    y_true_cal = np.asarray(y_true_cal)
+    logits = _logit(y_prob_raw).reshape(-1, 1)
+
+    lr = PlattLR()
+    if intercept_only:
+        X = np.ones_like(logits)  # only intercept term
+    else:
+        X = logits
+
+    lr.fit(X, y_true_cal)
+
+    if intercept_only:
+        return {"intercept": float(lr.intercept_[0]), "slope": 1.0}
+    return {"intercept": float(lr.intercept_[0]), "slope": float(lr.coef_[0][0])}
+
+
+def apply_logistic_recalibration(
+    params: Dict[str, float],
+    y_prob_raw: np.ndarray,
+) -> np.ndarray:
+    """Apply fitted (a, b) intercept/slope parameters to raw probabilities."""
+    y_prob_raw = np.asarray(y_prob_raw)
+    logits = _logit(y_prob_raw)
+    z = params["intercept"] + params["slope"] * logits
+    return _expit(z)
+
+
+def run_lightweight_updating(
+    outputs_dir: str | Path = "outputs",
+    n_bins: int = 10,
+    small_n_threshold: int = 100,
+    seed: int = 42,
+    save: bool = True,
+) -> Dict[str, List[Dict[str, Any]]]:
+    """
+    Stage 2.3 main entrypoint: logistic intercept/slope updating for external experiments.
+
+    For each external experiment:
+      - Use the same calibration_split() logic as Stage 2.2.
+      - Fit two variants on the calibration subset:
+          * intercept_only  (b = 1 fixed)
+          * intercept_slope (a, b both free)
+      - Compute calibration metrics before/after on the evaluation subset(s).
+      - Persist results under:
+          outputs/calibration/updating/intercept_only/
+          outputs/calibration/updating/intercept_slope/
+    """
+    outputs_path = Path(outputs_dir)
+
+    variants = ["intercept_only", "intercept_slope"]
+    variant_roots: Dict[str, Path] = {}
+    if save:
+        for v in variants:
+            root = outputs_path / "calibration" / "updating" / v
+            root.mkdir(parents=True, exist_ok=True)
+            variant_roots[v] = root
+
+    all_results: Dict[str, List[Dict[str, Any]]] = {v: [] for v in variants}
+
+    for exp in _iter_phase1_experiments(outputs_path):
+        if exp["experiment_type"] not in ("external_uci", "external_kaggle_uci"):
+            continue
+
+        pred_df = pd.read_parquet(exp["predictions_path"])
+        if "y_true" not in pred_df.columns or "y_prob" not in pred_df.columns:
+            continue
+        y_true = pred_df["y_true"].to_numpy()
+        y_prob = pred_df["y_prob"].to_numpy()
+        if len(y_true) == 0:
+            continue
+
+        with open(exp["results_path"]) as f:
+            meta = json.load(f)
+
+        splits, split_mode = calibration_split(
+            y_true,
+            small_n_threshold=small_n_threshold,
+            seed=seed,
+        )
+
+        for variant in variants:
+            per_fold_before: List[Dict[str, Any]] = []
+            per_fold_after: List[Dict[str, Any]] = []
+            per_fold_params: List[Dict[str, float]] = []
+            n_cal_total = 0
+            n_eval_total = 0
+
+            intercept_only = variant == "intercept_only"
+
+            for cal_idx, eval_idx in splits:
+                if len(cal_idx) == 0 or len(eval_idx) == 0:
+                    continue
+                y_cal = y_true[cal_idx]
+                p_cal = y_prob[cal_idx]
+                y_eval = y_true[eval_idx]
+                p_eval = y_prob[eval_idx]
+
+                params = logistic_recalibration(
+                    p_cal,
+                    y_cal,
+                    intercept_only=intercept_only,
+                )
+                p_updated = apply_logistic_recalibration(params, p_eval)
+
+                metrics_before = compute_calibration_metrics(
+                    y_eval,
+                    p_eval,
+                    n_bins=n_bins,
+                )
+                metrics_after = compute_calibration_metrics(
+                    y_eval,
+                    p_updated,
+                    n_bins=n_bins,
+                )
+
+                per_fold_before.append(metrics_before)
+                per_fold_after.append(metrics_after)
+                per_fold_params.append(params)
+                n_cal_total += len(cal_idx)
+                n_eval_total += len(eval_idx)
+
+            if not per_fold_before:
+                continue
+
+            agg_before = _aggregate_calibration_across_folds(per_fold_before)
+            agg_after = _aggregate_calibration_across_folds(per_fold_after)
+
+            improvement = {
+                "brier_delta": (
+                    (agg_before["brier_score"] - agg_after["brier_score"])
+                    if agg_before["brier_score"] is not None
+                    and agg_after["brier_score"] is not None
+                    else None
+                ),
+                "ece_delta": (
+                    (agg_before["ece"] - agg_after["ece"])
+                    if agg_before["ece"] is not None and agg_after["ece"] is not None
+                    else None
+                ),
+                "mce_delta": (
+                    (agg_before["mce"] - agg_after["mce"])
+                    if agg_before["mce"] is not None and agg_after["mce"] is not None
+                    else None
+                ),
+            }
+
+            # Mean params across folds (diagnostic)
+            mean_params: Dict[str, float] = {}
+            if per_fold_params:
+                for key in ("intercept", "slope"):
+                    vals = [p[key] for p in per_fold_params]
+                    mean_params[key] = float(np.mean(vals))
+
+            record: Dict[str, Any] = {
+                "experiment_type": exp["experiment_type"],
+                "model": exp["model"],
+                "variant": variant,
+                "split_mode": split_mode,
+                "n_calibration": int(n_cal_total),
+                "n_evaluation": int(n_eval_total),
+                "metrics_before": agg_before,
+                "metrics_after": agg_after,
+                "improvement": improvement,
+                "per_fold_params": per_fold_params,
+                "mean_params": mean_params,
+            }
+
+            if exp["experiment_type"] == "external_uci":
+                record["train_sites"] = meta.get("train_sites")
+                record["test_site"] = meta.get("test_site")
+            elif exp["experiment_type"] == "external_kaggle_uci":
+                record["train_site"] = meta.get("train_site")
+                record["test_site"] = meta.get("test_site")
+                record["experiment_variant"] = meta.get("variant", exp.get("variant"))
+
+            all_results[variant].append(record)
+
+            if save:
+                if exp["experiment_type"] == "external_uci":
+                    train_key = "+".join(sorted(record.get("train_sites") or []))
+                    fname = (
+                        f"external_uci__{train_key}__to__"
+                        f"{record.get('test_site')}__{record['model']}.json"
+                    )
+                else:  # external_kaggle_uci
+                    vname = record.get("experiment_variant") or "cfs"
+                    fname = (
+                        f"external_kaggle_uci__{vname}__"
+                        f"{record.get('train_site')}__to__"
+                        f"{record.get('test_site')}__{record['model']}.json"
+                    )
+                root = variant_roots[variant]
+                with open(root / fname, "w") as f:
+                    json.dump(record, f, indent=2, default=str)
+
+    if save:
+        for variant, records in all_results.items():
+            root = variant_roots[variant]
+            with open(root / "summary.json", "w") as f:
+                json.dump(records, f, indent=2, default=str)
+
+    return all_results
+
+
 if __name__ == "__main__":
     # CLI to execute calibration stages directly.
     #   python -m src.calibration              -> Stage 2.1 (before)
@@ -578,7 +801,12 @@ if __name__ == "__main__":
 
     import sys
 
-    if "--stage-2.2" in sys.argv or "--recalibration" in sys.argv:
+    if "--stage-2.3" in sys.argv or "--updating" in sys.argv:
+        upd = run_lightweight_updating(outputs_dir)
+        total = sum(len(v) for v in upd.values())
+        print(f"Stage 2.3 lightweight updating completed for {total} variant-experiment combos.")
+        print(f"Results written under {outputs_dir / 'calibration' / 'updating'}")
+    elif "--stage-2.2" in sys.argv or "--recalibration" in sys.argv:
         rec = run_recalibration(outputs_dir)
         total = sum(len(v) for v in rec.values())
         print(f"Stage 2.2 post-hoc recalibration completed for {total} method-experiment combos.")
