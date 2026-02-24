@@ -1,0 +1,47 @@
+{
+  "experiment_type": "external_uci",
+  "model": "lr",
+  "calibration_metrics": {
+    "brier_score": 0.5276099754165312,
+    "ece": 0.5327405365954804,
+    "mce": 0.8456274867997449,
+    "bin_details": [
+      {
+        "lo": 0.8,
+        "hi": 0.9,
+        "acc": 0.0,
+        "conf": 0.8456274867997449,
+        "n": 2
+      },
+      {
+        "lo": 0.9,
+        "hi": 1.0,
+        "acc": 0.46179401993355484,
+        "conf": 0.9924555734711996,
+        "n": 301
+      }
+    ],
+    "calibration_curve": {
+      "fraction_pos": [
+        0.0,
+        0.46179401993355484
+      ],
+      "mean_predicted": [
+        0.8456274867997449,
+        0.9924555734711991
+      ]
+    }
+  },
+  "n": 303,
+  "train_sites": [
+    "hungary",
+    "va",
+    "switzerland"
+  ],
+  "test_site": "cleveland",
+  "flags": {
+    "ece_moderate": true,
+    "ece_severe": true,
+    "mce_large": true
+  }
+}
