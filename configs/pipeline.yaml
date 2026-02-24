@@ -1,0 +1,33 @@
+# configs/pipeline.yaml — Stage C.1: experiment configuration
+# All experiments are driven by this config.
+
+random_seed: 42
+bootstrap_iters: 200
+bootstrap_iters_small: 500  # for N < 200
+
+models: [lr, rf, xgb, lgbm]
+
+internal_validation:
+  sites: [kaggle, cleveland, hungary, va, switzerland]
+  split: 0.8  # train fraction
+
+external_validation:
+  uci_pairwise: true
+  uci_loso: true
+  kaggle_uci: true
+
+missingness_threshold: 0.40
+
+calibration:
+  methods: [platt, isotonic, temperature]
+  n_bins: 10
+
+shift_diagnostics:
+  psi_bins: 10
+  psi_severe_threshold: 0.25
+  psi_moderate_threshold: 0.10
+  c2st: true
+
+size_matched:
+  enabled: true
+  K: 20
