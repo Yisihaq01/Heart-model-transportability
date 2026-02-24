@@ -23,9 +23,11 @@ import pandas as pd
 from sklearn.model_selection import train_test_split, RepeatedStratifiedKFold
 
 from . import artifacts
+from . import config
 from . import metrics
 from . import models
 from . import preprocessing
+from . import reproducibility
 
 
 # model_key -> model_family for preprocessing pipeline
@@ -164,6 +166,16 @@ def _load_sites(sites: list[str], data_dir: Path) -> pd.DataFrame:
     return pd.concat(dfs, ignore_index=True) if len(dfs) > 1 else dfs[0]
 
 
+def _load_pipeline_repro(config_path: str | Path | None) -> tuple[dict, int, str]:
+    """Load pipeline config; return (config, seed, config_hash). C.4 reproducibility."""
+    path = config_path or Path(__file__).resolve().parent.parent / "configs" / "pipeline.yaml"
+    path = Path(path)
+    cfg = config.load_config(path) if path.exists() else {"random_seed": 42}
+    seed = int(cfg.get("random_seed", 42))
+    reproducibility.set_global_seed(seed)
+    return cfg, seed, reproducibility.config_hash(cfg)
+
+
 def run_internal_cfs_validation(
     df: pd.DataFrame,
     dataset_label: str,
@@ -174,6 +186,7 @@ def run_internal_cfs_validation(
     bootstrap_B: int = 200,
     seed: int = 42,
     variant: str = "cfs",
+    config_hash: str | None = None,
 ) -> dict:
     """
     Stage 1.5 baseline: internal validation restricted to Kaggle↔UCI CFS (to measure CFS penalty).
@@ -216,7 +229,7 @@ def run_internal_cfs_validation(
             X_test_t = np.asarray(X_test_t)
 
             n_train = len(X_train_t)
-            fitted_model, best_params, _ = models.tune_model(model_key, X_train_t, y_train_t, n_train)
+            fitted_model, best_params, _ = models.tune_model(model_key, X_train_t, y_train_t, n_train, seed=seed)
 
             X_test_pred = _ensure_feature_names(fitted_model, X_test_t)
             y_prob = fitted_model.predict_proba(X_test_pred)[:, 1]
@@ -271,7 +284,7 @@ def run_internal_cfs_validation(
             "fitted_model": fitted_model,
             "fitted_pipeline": fitted_pipeline,
         }
-        artifacts.save_experiment(result, base_dir=output_dir)
+        artifacts.save_experiment(result, base_dir=output_dir, config_hash=config_hash)
         results[model_key] = result
 
     return results
@@ -281,10 +294,11 @@ def run_kaggle_uci_tests(
     data_dir: str | Path = "data",
     output_dir: str | Path = "outputs",
     report_path: str | Path | None = None,
+    pipeline_config_path: str | Path | None = None,
     uci_sites: list[str] | None = None,
     model_keys: list[str] | None = None,
     bootstrap_B: int = 500,
-    seed: int = 42,
+    seed: int | None = None,
     include_cholesterol: bool = False,
     include_pooled: bool = True,
     run_internal_baselines: bool = True,
@@ -294,9 +308,15 @@ def run_kaggle_uci_tests(
 
     Writes to outputs/external_kaggle_uci/{train}__to__{test}/{model}/...
     Also (optionally) writes CFS-only internal baselines to outputs/internal_cfs/...
+    C.4: loads pipeline config when pipeline_config_path given; uses config seed and config_hash.
     """
     data_dir = Path(data_dir)
     output_dir = Path(output_dir)
+    _, seed_used, cfg_hash = _load_pipeline_repro(pipeline_config_path)
+    if seed is not None:
+        seed_used = seed
+    else:
+        reproducibility.set_global_seed(seed_used)
     if report_path is None:
         report_path = data_dir / "ingestion_report.json"
     config = preprocessing.load_preprocessing_config(report_path)
@@ -345,8 +365,9 @@ def run_kaggle_uci_tests(
                     output_dir=output_dir,
                     model_keys=model_keys,
                     bootstrap_B=200,
-                    seed=seed,
+                    seed=seed_used,
                     variant=variant,
+                    config_hash=cfg_hash,
                 )
 
         exp_key = (train_label, test_label)
@@ -368,7 +389,7 @@ def run_kaggle_uci_tests(
             X_train_t = np.asarray(X_train_t)
             X_test_t = np.asarray(X_test_t)
 
-            fitted_model, best_params, _ = models.tune_model(model_key, X_train_t, y_train_t, len(X_train_t))
+            fitted_model, best_params, _ = models.tune_model(model_key, X_train_t, y_train_t, len(X_train_t), seed=seed_used)
 
             X_test_pred = _ensure_feature_names(fitted_model, X_test_t)
             y_prob = fitted_model.predict_proba(X_test_pred)[:, 1]
@@ -376,7 +397,7 @@ def run_kaggle_uci_tests(
             y_test_np = np.asarray(y_test)
 
             point_metrics = metrics.compute_metrics(y_test_np, y_prob, y_pred)
-            boot_cis = metrics.bootstrap_metrics(y_test_np, y_prob, y_pred, B=bootstrap_B, seed=seed)
+            boot_cis = metrics.bootstrap_metrics(y_test_np, y_prob, y_pred, B=bootstrap_B, seed=seed_used)
 
             predictions = [
                 {"y_true": int(y_test_np[i]), "y_prob": float(y_prob[i]), "y_pred": int(y_pred[i])}
@@ -400,7 +421,7 @@ def run_kaggle_uci_tests(
                 "fitted_model": fitted_model,
                 "fitted_pipeline": pipeline,
             }
-            artifacts.save_experiment(result, base_dir=output_dir)
+            artifacts.save_experiment(result, base_dir=output_dir, config_hash=cfg_hash)
             results[exp_key][model_key] = result
 
     return {"external": results, "internal_cfs": internal_cfs, "cfs_features": cfs_features, "variant": variant}
@@ -410,17 +431,23 @@ def run_external_uci_matrix(
     data_dir: str | Path = "data",
     output_dir: str | Path = "outputs",
     report_path: str | Path | None = None,
+    pipeline_config_path: str | Path | None = None,
     sites: list[str] | None = None,
     model_keys: list[str] | None = None,
     bootstrap_B: int = 500,
-    seed: int = 42,
+    seed: int | None = None,
 ) -> dict:
     """
     Stage 1.4: Train on one or more UCI sites, test on held-out UCI site.
     Uses effective_cfs per (train, test) pair; saves results.json, predictions.parquet, model.joblib.
+    C.4: loads pipeline config for seed and config_hash when pipeline_config_path given.
     """
     data_dir = Path(data_dir)
     output_dir = Path(output_dir)
+    _, seed_used, cfg_hash = _load_pipeline_repro(pipeline_config_path)
+    if seed is not None:
+        seed_used = seed
+        reproducibility.set_global_seed(seed_used)
     if report_path is None:
         report_path = data_dir / "ingestion_report.json"
     config = preprocessing.load_preprocessing_config(report_path)
@@ -465,7 +492,7 @@ def run_external_uci_matrix(
             X_test_t = np.asarray(X_test_t)
 
             n_train = len(X_train_t)
-            fitted_model, best_params, _ = models.tune_model(model_key, X_train_t, y_train_t, n_train)
+            fitted_model, best_params, _ = models.tune_model(model_key, X_train_t, y_train_t, n_train, seed=seed_used)
 
             X_test_pred = _ensure_feature_names(fitted_model, X_test_t)
             y_prob = fitted_model.predict_proba(X_test_pred)[:, 1]
@@ -473,7 +500,7 @@ def run_external_uci_matrix(
             y_test_np = np.asarray(y_test)
 
             point_metrics = metrics.compute_metrics(y_test_np, y_prob, y_pred)
-            boot_cis = metrics.bootstrap_metrics(y_test_np, y_prob, y_pred, B=bootstrap_B, seed=seed)
+            boot_cis = metrics.bootstrap_metrics(y_test_np, y_prob, y_pred, B=bootstrap_B, seed=seed_used)
 
             predictions = [
                 {"y_true": int(y_test_np[i]), "y_prob": float(y_prob[i]), "y_pred": int(y_pred[i])}
@@ -494,7 +521,7 @@ def run_external_uci_matrix(
                 "predictions": predictions,
                 "fitted_model": fitted_model,
             }
-            artifacts.save_experiment(result, base_dir=output_dir)
+            artifacts.save_experiment(result, base_dir=output_dir, config_hash=cfg_hash)
             results[exp_key][model_key] = result
 
     return results
@@ -504,17 +531,23 @@ def run_internal_validation(
     data_dir: str | Path = "data",
     output_dir: str | Path = "outputs",
     report_path: str | Path | None = None,
+    pipeline_config_path: str | Path | None = None,
     sites: list[str] | None = None,
     model_keys: list[str] | None = None,
     bootstrap_B: int = 200,
-    seed: int = 42,
+    seed: int | None = None,
 ) -> dict:
     """
     Stage 1.3: For every site × model, run internal split(s), tune, predict, compute metrics + bootstrap CIs,
     save results.json, predictions.parquet, model.joblib, pipeline.joblib.
+    C.4: loads pipeline config for seed and config_hash; logs features_used, n_train, n_test, timestamp.
     """
     data_dir = Path(data_dir)
     output_dir = Path(output_dir)
+    _, seed_used, cfg_hash = _load_pipeline_repro(pipeline_config_path)
+    if seed is not None:
+        seed_used = seed
+        reproducibility.set_global_seed(seed_used)
     if report_path is None:
         report_path = data_dir / "ingestion_report.json"
     config = preprocessing.load_preprocessing_config(report_path)
@@ -532,7 +565,7 @@ def run_internal_validation(
         features = [c for c in features if df[c].notna().any()]
         if not features:
             continue
-        splits = internal_split(df, site, seed=seed)
+        splits = internal_split(df, site, seed=seed_used)
 
         for model_key in model_keys:
             if model_key not in MODEL_FAMILY:
@@ -560,7 +593,7 @@ def run_internal_validation(
                 X_test_t = np.asarray(X_test_t)
 
                 n_train = len(X_train_t)
-                fitted_model, best_params, _ = models.tune_model(model_key, X_train_t, y_train_t, n_train)
+                fitted_model, best_params, _ = models.tune_model(model_key, X_train_t, y_train_t, n_train, seed=seed_used)
 
                 X_test_pred = _ensure_feature_names(fitted_model, X_test_t)
                 y_prob = fitted_model.predict_proba(X_test_pred)[:, 1]
@@ -570,7 +603,7 @@ def run_internal_validation(
                 point_metrics = metrics.compute_metrics(y_test_np, y_prob, y_pred)
                 fold_metrics.append(point_metrics)
                 B = 500 if len(y_test_np) < 200 else bootstrap_B
-                boot_cis = metrics.bootstrap_metrics(y_test_np, y_prob, y_pred, B=B, seed=seed)
+                boot_cis = metrics.bootstrap_metrics(y_test_np, y_prob, y_pred, B=B, seed=seed_used)
                 fold_cis.append(boot_cis)
 
                 for i in range(len(y_test_np)):
@@ -598,10 +631,15 @@ def run_internal_validation(
                 agg_metrics["confusion_matrix"] = cm.astype(int).tolist()
                 agg_cis = fold_cis[0]
 
+            n_test = agg_metrics.get("n_test", 0)
+            n_train_final = len(splits[0][0]) if splits else None  # train size (first fold)
             result = {
                 "experiment_type": "internal",
                 "site": site,
                 "model": model_key,
+                "features_used": features,
+                "n_train": n_train_final,
+                "n_test": n_test,
                 "best_params": best_params,
                 "metrics": agg_metrics,
                 "bootstrap_cis": agg_cis,
@@ -609,7 +647,7 @@ def run_internal_validation(
                 "fitted_model": fitted_model,
                 "fitted_pipeline": fitted_pipeline,
             }
-            artifacts.save_experiment(result, base_dir=output_dir)
+            artifacts.save_experiment(result, base_dir=output_dir, config_hash=cfg_hash)
             results.setdefault(site, {})[model_key] = result
     return results
 

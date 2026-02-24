@@ -69,36 +69,35 @@ MODEL_REGISTRY = {
 }
 
 
-def get_model(model_key: str, **override_params):
-    """Return an estimator instance for the given key with merged params."""
+def get_model(model_key: str, seed: int = 42, **override_params):
+    """Return an estimator instance for the given key with merged params. C.4: seed from config."""
     if model_key not in MODEL_REGISTRY:
         raise KeyError(f"Unknown model_key: {model_key}. Valid: {list(MODEL_REGISTRY)}")
     entry = MODEL_REGISTRY[model_key]
-    params = {**entry["default_params"], **override_params}
+    params = {**entry["default_params"], "random_state": seed, **override_params}
     return entry["class"](**params)
 
 
-def tune_model(model_key: str, X_train, y_train, n_samples: int):
+def tune_model(model_key: str, X_train, y_train, n_samples: int, seed: int = 42):
     """
     Inner 5-fold CV (or 5x3 repeated for n < 200) with GridSearchCV, roc_auc.
-    Returns (best_estimator, best_params, cv_results).
+    Returns (best_estimator, best_params, cv_results). C.4: seed from config for determinism.
     """
     if model_key not in MODEL_REGISTRY:
         raise KeyError(f"Unknown model_key: {model_key}. Valid: {list(MODEL_REGISTRY)}")
     entry = MODEL_REGISTRY[model_key]
-    base_model = entry["class"](**entry["default_params"])
+    base_params = {**entry["default_params"], "random_state": seed}
+    base_model = entry["class"](**base_params)
 
     cv = (
-        RepeatedStratifiedKFold(n_splits=5, n_repeats=3, random_state=42)
+        RepeatedStratifiedKFold(n_splits=5, n_repeats=3, random_state=seed)
         if n_samples < 200
-        else StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+        else StratifiedKFold(n_splits=5, shuffle=True, random_state=seed)
     )
 
     grid = entry["tuning_grid"]
-    # For boosted models, full grid search is expensive; use bounded randomized search (per pipeline_plan.md).
     use_random = model_key in ("xgb", "lgbm")
     if use_random:
-        # Upper-bound iterations by number of unique combinations in the grid.
         n_candidates = int(prod(len(v) for v in grid.values())) if grid else 1
         n_iter = min(20, n_candidates)
         search = RandomizedSearchCV(
@@ -109,7 +108,7 @@ def tune_model(model_key: str, X_train, y_train, n_samples: int):
             cv=cv,
             n_jobs=-1,
             refit=True,
-            random_state=42,
+            random_state=seed,
         )
     else:
         search = GridSearchCV(

@@ -1,6 +1,7 @@
 """
 Stage C.3 — Artifact serialization.
 Persist results, predictions, fitted models, and pipelines to outputs/.
+Stage C.4: every experiment log includes timestamp; optional config_hash when provided.
 """
 from __future__ import annotations
 
@@ -10,13 +11,20 @@ from pathlib import Path
 
 import pandas as pd
 
+from . import reproducibility
 
-def save_experiment(result: dict, base_dir: str | Path = "outputs") -> Path:
+
+def save_experiment(
+    result: dict,
+    base_dir: str | Path = "outputs",
+    config_hash: str | None = None,
+) -> Path:
     """
     Persist experiment to outputs/. Writes results.json (all keys except predictions,
     fitted_model, fitted_pipeline). If predictions present, writes predictions.parquet.
     For internal/external_uci/external_kaggle_uci, writes model.joblib and pipeline.joblib
     when fitted_model/fitted_pipeline are provided.
+    C.4: timestamp always added to results.json; config_hash added when provided.
     """
     base_dir = Path(base_dir)
     exp_type = result["experiment_type"]
@@ -39,6 +47,10 @@ def save_experiment(result: dict, base_dir: str | Path = "outputs") -> Path:
 
     # JSON: all except predictions and non-serializable fitted objects
     payload = {k: v for k, v in result.items() if k not in ("predictions", "fitted_model", "fitted_pipeline")}
+    # C.4 reproducibility: timestamp always; config_hash when provided
+    payload["timestamp"] = reproducibility.experiment_timestamp()
+    if config_hash is not None:
+        payload["config_hash"] = config_hash
     with open(path / "results.json", "w") as f:
         json.dump(payload, f, indent=2, default=str)
 
