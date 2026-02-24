@@ -13,8 +13,10 @@ import pandas as pd
 
 def save_experiment(result: dict, base_dir: str | Path = "outputs") -> Path:
     """
-    Write results.json, predictions.parquet; for internal experiments also model.joblib and pipeline.joblib.
-    result may contain optional keys: fitted_model, fitted_pipeline (for internal only).
+    Persist experiment to outputs/. Writes results.json (all keys except predictions,
+    fitted_model, fitted_pipeline). If predictions present, writes predictions.parquet.
+    For internal/external_uci/external_kaggle_uci, writes model.joblib and pipeline.joblib
+    when fitted_model/fitted_pipeline are provided.
     """
     base_dir = Path(base_dir)
     exp_type = result["experiment_type"]
@@ -41,9 +43,7 @@ def save_experiment(result: dict, base_dir: str | Path = "outputs") -> Path:
         json.dump(payload, f, indent=2, default=str)
 
     if "predictions" in result:
-        pred_df = pd.DataFrame(result["predictions"])
-        pred_df.to_parquet(path / "predictions.parquet", index=False)
-        pred_df.to_csv(path / "predictions.csv", index=False)
+        pd.DataFrame(result["predictions"]).to_parquet(path / "predictions.parquet", index=False)
 
     if exp_type in ("internal", "internal_cfs"):
         if "fitted_model" in result:

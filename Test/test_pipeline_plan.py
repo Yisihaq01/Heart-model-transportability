@@ -2,9 +2,19 @@
 Tests that pipeline_plan.md logic works: resolve_features, metrics, validation splits,
 shift diagnostics, calibration helpers, CFS penalty. Uses minimal/synthetic data where needed.
 """
+import sys
+import tempfile
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
 import pytest
+
+ROOT = Path(__file__).resolve().parent.parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from src.artifacts import save_experiment
 
 # Pipeline plan Stage C.2 — metrics
 from sklearn.metrics import (
@@ -324,3 +334,75 @@ class TestPipelinePlanIntegration:
         m = compute_metrics(y_test.values, y_prob, y_pred)
         assert m["n_test"] == len(test_idx)
         assert 0 <= m["roc_auc"] <= 1
+
+
+class TestStageC3ArtifactSerialization:
+    """Stage C.3 — Artifact serialization: save_experiment writes results.json, predictions.parquet, model.joblib, pipeline.joblib."""
+
+    def test_internal_experiment_creates_expected_files(self):
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.pipeline import Pipeline
+        from sklearn.preprocessing import StandardScaler
+
+        with tempfile.TemporaryDirectory() as tmp:
+            result = {
+                "experiment_type": "internal",
+                "site": "cleveland",
+                "model": "lr",
+                "metrics": {"roc_auc": 0.82, "brier_score": 0.15},
+                "predictions": {"y_true": [0, 1, 0], "y_prob": [0.2, 0.8, 0.3], "y_pred": [0, 1, 0]},
+                "fitted_model": LogisticRegression().fit([[1], [2], [3]], [0, 1, 0]),
+                "fitted_pipeline": Pipeline([("scaler", StandardScaler())]).fit([[1], [2], [3]]),
+            }
+            path = save_experiment(result, base_dir=tmp)
+            assert (path / "results.json").exists()
+            assert (path / "predictions.parquet").exists()
+            assert (path / "model.joblib").exists()
+            assert (path / "pipeline.joblib").exists()
+            assert path == Path(tmp) / "internal" / "cleveland" / "lr"
+
+    def test_external_uci_experiment_creates_expected_path_and_files(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            result = {
+                "experiment_type": "external_uci",
+                "train_sites": ["cleveland", "hungary"],
+                "test_site": "va",
+                "model": "rf",
+                "metrics": {"roc_auc": 0.75},
+                "predictions": {"y_true": [0, 1], "y_prob": [0.4, 0.6]},
+            }
+            path = save_experiment(result, base_dir=tmp)
+            assert (path / "results.json").exists()
+            assert (path / "predictions.parquet").exists()
+            assert "cleveland+hungary" in str(path) and "va" in str(path)
+            assert path == Path(tmp) / "external_uci" / "cleveland+hungary__to__va" / "rf"
+
+    def test_external_kaggle_uci_experiment_creates_expected_path(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            result = {
+                "experiment_type": "external_kaggle_uci",
+                "train_site": "kaggle",
+                "test_site": "cleveland",
+                "model": "xgb",
+                "metrics": {"roc_auc": 0.70},
+                "predictions": {"y_true": [0, 1, 0], "y_prob": [0.3, 0.7, 0.4]},
+            }
+            path = save_experiment(result, base_dir=tmp)
+            assert (path / "results.json").exists()
+            assert (path / "predictions.parquet").exists()
+            assert "kaggle__to__cleveland" in str(path)
+
+    def test_results_json_excludes_predictions_and_fitted_objects(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            result = {
+                "experiment_type": "internal",
+                "site": "va",
+                "model": "lr",
+                "predictions": {"y_true": [0], "y_prob": [0.5]},
+            }
+            path = save_experiment(result, base_dir=tmp)
+            import json
+            with open(path / "results.json") as f:
+                data = json.load(f)
+            assert "predictions" not in data
+            assert data["site"] == "va" and data["model"] == "lr"
