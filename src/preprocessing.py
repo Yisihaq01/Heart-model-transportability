@@ -107,6 +107,8 @@ def build_imputer(
             transformers.append((col, SimpleImputer(strategy="median"), [col]))
         elif col in BINARY_COLS + ORDINAL_COLS + NOMINAL_COLS:
             transformers.append((col, SimpleImputer(strategy="most_frequent"), [col]))
+        else:
+            transformers.append((col, "passthrough", [col]))
     ct = ColumnTransformer(
         transformers,
         remainder="drop",

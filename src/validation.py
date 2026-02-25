@@ -563,6 +563,10 @@ def run_internal_validation(
         features = [c for c in preprocessing.resolve_features(site, site, config) if c in df.columns]
         # Drop columns that are all NaN (e.g. thal in VA/Hungary) so pipeline never sees missing column
         features = [c for c in features if df[c].notna().any()]
+        # Switzerland has extremely sparse fbs; per-fold splits can yield no observed values in X_train,
+        # which breaks ColumnTransformer/Imputer. Exclude fbs for this small site in internal validation.
+        if site == "switzerland" and "fbs" in features:
+            features = [c for c in features if c != "fbs"]
         if not features:
             continue
         splits = internal_split(df, site, seed=seed_used)
