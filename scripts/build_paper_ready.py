@@ -505,6 +505,14 @@ def main() -> None:
     top_shift = top_shift_diagnostics(shift, n=10)
     save_table(top_shift, "table_shift_top")
 
+    # Calibration failure analysis (formal layer)
+    import subprocess
+    subprocess.run(
+        [__import__("sys").executable, str(ROOT / "scripts" / "build_calibration_analysis.py")],
+        cwd=str(ROOT),
+        check=False,
+    )
+
     # Figures
     if not comp.empty:
         plot_internal_vs_external_simple(comp)

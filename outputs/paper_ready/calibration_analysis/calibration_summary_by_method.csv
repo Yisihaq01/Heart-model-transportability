@@ -1,0 +1,6 @@
+method,n,improved,degraded,neutral,pct_improved,pct_degraded,pct_neutral
+intercept_only,144,62,30,52,43.10,20.80,36.10
+intercept_slope,144,119,20,5,82.60,13.90,3.50
+isotonic,144,121,19,4,84.00,13.20,2.80
+platt,144,119,17,8,82.60,11.80,5.60
+temperature,144,104,11,29,72.20,7.60,20.10
