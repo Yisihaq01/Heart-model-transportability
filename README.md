@@ -105,6 +105,13 @@ Four cohorts sharing a common 14-attribute schema: **Cleveland** (processed 14-c
 - **Shift diagnostics:** Feature distribution comparisons, drift flags, prevalence differences
 - **Reporting:** TRIPOD+AI for completeness, PROBAST+AI for bias risk assessment
 
+## Compliance & Reporting Artifacts
+
+| Artifact | Location | Description |
+|----------|----------|-------------|
+| **TRIPOD+AI Checklist** | [`reports/compliance/TRIPOD_AI_CHECKLIST.md`](reports/compliance/TRIPOD_AI_CHECKLIST.md) | 27-item checklist mapped to project files/sections |
+| **PROBAST Risk Assessment** | [`reports/compliance/PROBAST_RISK_ASSESSMENT.md`](reports/compliance/PROBAST_RISK_ASSESSMENT.md) | Domain-level bias/risk table with judgments and rationale |
+
 ## Project Structure
 
 ```
@@ -127,7 +134,8 @@ Heart-model-transportability/
 ├── src/                      # Loading, cleaning, modeling, calibration, drift, evaluation (planned)
 ├── configs/                  # Run configs: site pairs, models, seeds (planned)
 ├── outputs/                  # Experiment artifacts: results, predictions, models (see below)
-├── reports/                  # Markdown/HTML evaluation report — TRIPOD+AI aligned (planned)
+├── reports/                  # Evaluation report, compliance artifacts
+│   └── compliance/           # TRIPOD+AI checklist, PROBAST risk assessment
 ├── app/                      # Transportability Dashboard — Streamlit/Dash (planned)
 ├── requirements.txt          # (planned)
 └── README.md
