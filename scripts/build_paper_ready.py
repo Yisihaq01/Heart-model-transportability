@@ -24,6 +24,8 @@ except ImportError:
 
 ROOT = Path(__file__).resolve().parent.parent
 OUTPUTS = ROOT / "outputs"
+# Source dir for artifacts; set in main() from --run-id or legacy
+SOURCE = OUTPUTS
 PAPER_READY = OUTPUTS / "paper_ready"
 
 
@@ -45,7 +47,7 @@ def safe_float(x: Any) -> float:
 
 def collect_internal() -> pd.DataFrame:
     rows = []
-    internal_dir = OUTPUTS / "internal"
+    internal_dir = SOURCE / "internal"
     if not internal_dir.exists():
         return pd.DataFrame()
     for site_dir in internal_dir.iterdir():
@@ -79,7 +81,7 @@ def collect_internal() -> pd.DataFrame:
 
 def collect_external_uci() -> pd.DataFrame:
     rows = []
-    ext_dir = OUTPUTS / "external_uci"
+    ext_dir = SOURCE / "external_uci"
     if not ext_dir.exists():
         return pd.DataFrame()
     for pair_dir in ext_dir.iterdir():
@@ -117,7 +119,7 @@ def collect_external_uci() -> pd.DataFrame:
 
 def collect_external_kaggle_uci() -> pd.DataFrame:
     rows = []
-    ext_dir = OUTPUTS / "external_kaggle_uci"
+    ext_dir = SOURCE / "external_kaggle_uci"
     if not ext_dir.exists():
         return pd.DataFrame()
     for variant_dir in ext_dir.iterdir():
@@ -160,7 +162,7 @@ def collect_external_kaggle_uci() -> pd.DataFrame:
 
 def collect_size_matched() -> pd.DataFrame:
     rows = []
-    sm_dir = OUTPUTS / "size_matched"
+    sm_dir = SOURCE / "size_matched"
     if not sm_dir.exists():
         return pd.DataFrame()
     for pair_dir in sm_dir.iterdir():
@@ -193,7 +195,7 @@ def collect_size_matched() -> pd.DataFrame:
 
 def collect_shift() -> pd.DataFrame:
     rows = []
-    shift_dir = OUTPUTS / "shift"
+    shift_dir = SOURCE / "shift"
     if not shift_dir.exists():
         return pd.DataFrame()
     for pair_dir in shift_dir.iterdir():
@@ -224,7 +226,7 @@ def collect_shift() -> pd.DataFrame:
 def collect_calibration_summary() -> pd.DataFrame:
     rows = []
     for variant in ["intercept_only", "intercept_slope"]:
-        summary_path = OUTPUTS / "calibration" / "updating" / variant / "summary.json"
+        summary_path = SOURCE / "calibration" / "updating" / variant / "summary.json"
         if not summary_path.exists():
             continue
         try:
@@ -259,7 +261,8 @@ def collect_calibration_summary() -> pd.DataFrame:
 
 def build_internal_vs_external(internal: pd.DataFrame, external: pd.DataFrame) -> pd.DataFrame:
     """Internal vs external performance comparison (by test site)."""
-    # For each test site, get internal AUC (when site matches) vs best external AUC
+    if internal.empty or "site" not in internal.columns:
+        return pd.DataFrame()
     comp = []
     sites = internal["site"].unique().tolist()
     for site in sites:
@@ -284,8 +287,9 @@ def build_internal_vs_external(internal: pd.DataFrame, external: pd.DataFrame) -
 
 def build_cfs_penalty_table(internal: pd.DataFrame, ext_kaggle: pd.DataFrame) -> pd.DataFrame:
     """CFS penalty: full-feature (internal) AUC vs CFS (external_kaggle_uci) AUC."""
+    if internal.empty or "site" not in internal.columns:
+        return pd.DataFrame()
     rows = []
-    # For each test site that appears in both internal and external_kaggle_uci
     for test_site in internal["site"].unique():
         int_sub = internal[internal["site"] == test_site]
         ext_sub = ext_kaggle[ext_kaggle["test_site"] == test_site]
@@ -472,6 +476,18 @@ def plot_shift_top(shift: pd.DataFrame, n: int = 10) -> None:
 
 
 def main() -> None:
+    global SOURCE, PAPER_READY
+    import argparse
+    p = argparse.ArgumentParser(description="Build paper-ready evidence bundle")
+    p.add_argument("--run-id", type=str, default=None, help="Canonical run ID (outputs/runs/{run_id}/); else legacy outputs/")
+    args = p.parse_args()
+    if args.run_id:
+        SOURCE = OUTPUTS / "runs" / args.run_id
+        PAPER_READY = SOURCE / "paper_ready"
+    else:
+        SOURCE = OUTPUTS
+        PAPER_READY = OUTPUTS / "paper_ready"
+
     PAPER_READY.mkdir(parents=True, exist_ok=True)
 
     internal = collect_internal()
@@ -494,24 +510,24 @@ def main() -> None:
     if not cal_summary.empty:
         plot_calibration_summary(cal_summary)
 
-    sm_summary = size_matched.groupby(["train_sites", "test_site"]).agg({
-        "roc_auc_mean": "mean",
-        "roc_auc_std": "mean",
-        "ece_mean": "mean",
-    }).reset_index()
-    sm_summary.columns = ["train_sites", "test_site", "roc_auc_mean", "roc_auc_std", "ece_mean"]
-    save_table(sm_summary, "table_size_matched_summary")
+    if not size_matched.empty and "train_sites" in size_matched.columns:
+        sm_summary = size_matched.groupby(["train_sites", "test_site"]).agg({
+            "roc_auc_mean": "mean",
+            "roc_auc_std": "mean",
+            "ece_mean": "mean",
+        }).reset_index()
+        sm_summary.columns = ["train_sites", "test_site", "roc_auc_mean", "roc_auc_std", "ece_mean"]
+        save_table(sm_summary, "table_size_matched_summary")
 
     top_shift = top_shift_diagnostics(shift, n=10)
     save_table(top_shift, "table_shift_top")
 
     # Calibration failure analysis (formal layer)
     import subprocess
-    subprocess.run(
-        [__import__("sys").executable, str(ROOT / "scripts" / "build_calibration_analysis.py")],
-        cwd=str(ROOT),
-        check=False,
-    )
+    cmd = [__import__("sys").executable, str(ROOT / "scripts" / "build_calibration_analysis.py")]
+    if args.run_id:
+        cmd.extend(["--run-id", args.run_id])
+    subprocess.run(cmd, cwd=str(ROOT), check=False)
 
     # Figures
     if not comp.empty:

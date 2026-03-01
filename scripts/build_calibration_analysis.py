@@ -19,6 +19,8 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parent.parent
 OUTPUTS = ROOT / "outputs"
+# Source dir; set in main() from --run-id or legacy
+SOURCE = OUTPUTS
 CALIBRATION = OUTPUTS / "calibration"
 PAPER_READY = OUTPUTS / "paper_ready"
 ANALYSIS_OUT = PAPER_READY / "calibration_analysis"
@@ -100,8 +102,9 @@ def collect_calibration_records() -> pd.DataFrame:
     rows: list[dict[str, Any]] = []
 
     # Recalibration: platt, isotonic, temperature
+    cal = SOURCE / "calibration"
     for method in ["platt", "isotonic", "temperature"]:
-        recalc_dir = CALIBRATION / "recalibration" / method
+        recalc_dir = cal / "recalibration" / method
         if not recalc_dir.exists():
             continue
         for f in recalc_dir.glob("*.json"):
@@ -145,7 +148,7 @@ def collect_calibration_records() -> pd.DataFrame:
 
     # Updating: intercept_only, intercept_slope
     for variant in ["intercept_only", "intercept_slope"]:
-        upd_dir = CALIBRATION / "updating" / variant
+        upd_dir = cal / "updating" / variant
         if not upd_dir.exists():
             continue
         for f in upd_dir.glob("*.json"):
@@ -381,6 +384,19 @@ def write_interpretation_note(master: pd.DataFrame, summary: pd.DataFrame, failu
 
 
 def main() -> None:
+    global SOURCE, CALIBRATION, PAPER_READY, ANALYSIS_OUT
+    import argparse
+    p = argparse.ArgumentParser(description="Build calibration failure analysis")
+    p.add_argument("--run-id", type=str, default=None, help="Canonical run ID; else legacy outputs/")
+    args = p.parse_args()
+    if args.run_id:
+        SOURCE = OUTPUTS / "runs" / args.run_id
+    else:
+        SOURCE = OUTPUTS
+    CALIBRATION = SOURCE / "calibration"
+    PAPER_READY = SOURCE / "paper_ready"
+    ANALYSIS_OUT = PAPER_READY / "calibration_analysis"
+
     ANALYSIS_OUT.mkdir(parents=True, exist_ok=True)
 
     df = collect_calibration_records()

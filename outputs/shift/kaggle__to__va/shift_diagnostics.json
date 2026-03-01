@@ -3,7 +3,7 @@
     "kaggle"
   ],
   "test_site": "va",
-  "model": "xgb",
+  "model": "lgbm",
   "experiment_type": "external_kaggle_uci",
   "prevalence_shift": {
     "train_prevalence": 0.49467450455431716,

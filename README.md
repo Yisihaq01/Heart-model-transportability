@@ -153,7 +153,7 @@ Each experiment (internal, internal_cfs, external_uci, external_kaggle_uci) writ
 | `model.joblib` | Fitted estimator | When model saved |
 | `pipeline.joblib` | Fitted preprocessing pipeline | When pipeline exists |
 
-Downstream stages add calibration, size_matched, and shift artifacts. Full paths and contract details: `ImplementationPlan/pipeline_outputs.md`.
+Downstream stages add calibration, size_matched, and shift artifacts. Full paths and contract details: `ImplementationPlan/pipeline_outputs.md`. For reproducible runs with manifest (config_hash, seed, code_version, artifact index), use `scripts/run_pipeline.py`; outputs go to `outputs/runs/{run_id}/`. See `outputs/README.md`.
 
 ## Deliverables
 
