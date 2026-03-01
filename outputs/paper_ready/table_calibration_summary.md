@@ -1,0 +1,18 @@
+| variant | experiment_type | model | ece_before | ece_after | brier_before | brier_after | ece_delta | brier_delta |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| intercept_only | external_kaggle_uci | lgbm | 0.2535 | 0.2175 | 0.3040 | 0.2771 | -0.0360 | -0.0270
+| intercept_only | external_kaggle_uci | lr | 0.2225 | 0.1931 | 0.2881 | 0.2666 | -0.0293 | -0.0215
+| intercept_only | external_kaggle_uci | rf | 0.1793 | 0.1483 | 0.2643 | 0.2428 | -0.0310 | -0.0216
+| intercept_only | external_kaggle_uci | xgb | 0.2472 | 0.2190 | 0.3011 | 0.2788 | -0.0283 | -0.0223
+| intercept_only | external_uci | lgbm | 0.2555 | 0.1830 | 0.2335 | 0.1962 | -0.0725 | -0.0373
+| intercept_only | external_uci | lr | 0.3620 | 0.2807 | 0.3289 | 0.2845 | -0.0814 | -0.0444
+| intercept_only | external_uci | rf | 0.2080 | 0.1403 | 0.1937 | 0.1673 | -0.0677 | -0.0264
+| intercept_only | external_uci | xgb | 0.2489 | 0.1800 | 0.2334 | 0.2001 | -0.0689 | -0.0332
+| intercept_slope | external_kaggle_uci | lgbm | 0.2535 | 0.0644 | 0.3040 | 0.2232 | -0.1892 | -0.0808
+| intercept_slope | external_kaggle_uci | lr | 0.2225 | 0.0752 | 0.2881 | 0.2229 | -0.1473 | -0.0652
+| intercept_slope | external_kaggle_uci | rf | 0.1793 | 0.0589 | 0.2643 | 0.2214 | -0.1205 | -0.0429
+| intercept_slope | external_kaggle_uci | xgb | 0.2472 | 0.0638 | 0.3011 | 0.2244 | -0.1834 | -0.0768
+| intercept_slope | external_uci | lgbm | 0.2555 | 0.1108 | 0.2335 | 0.1606 | -0.1447 | -0.0729
+| intercept_slope | external_uci | lr | 0.3620 | 0.0984 | 0.3289 | 0.1702 | -0.2636 | -0.1587
+| intercept_slope | external_uci | rf | 0.2080 | 0.1006 | 0.1937 | 0.1535 | -0.1074 | -0.0402
+| intercept_slope | external_uci | xgb | 0.2489 | 0.1073 | 0.2334 | 0.1614 | -0.1416 | -0.0719
