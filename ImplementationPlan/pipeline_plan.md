@@ -290,11 +290,11 @@ for site in [kaggle, cleveland, hungary, va, switzerland]:
 #### 1.3.4  Outputs
 
 | Artifact | Path | Format |
-|---|---|---|
+|----------|------|--------|
 | Per-experiment results | `outputs/internal/{site}/{model_key}/results.json` | JSON (metrics, params, CIs) |
-| Predictions | `outputs/internal/{site}/{model_key}/predictions.parquet` | Parquet (y_true, y_prob, y_pred, fold) |
+| Predictions | `outputs/internal/{site}/{model_key}/predictions.parquet` | Parquet (canonical); `predictions.csv` optional |
 | Trained model | `outputs/internal/{site}/{model_key}/model.joblib` | Joblib |
-| Preprocessing pipeline | `outputs/internal/{site}/{model_key}/pipeline.joblib` | Joblib |
+| Preprocessing pipeline | `outputs/internal/{site}/{model_key}/pipeline.joblib` | Joblib (when present) |
 
 ---
 
@@ -399,10 +399,11 @@ for (train_sites, test_site) in validation_matrix:
 #### 1.4.4  Outputs
 
 | Artifact | Path |
-|---|---|
+|----------|------|
 | Per-experiment results | `outputs/external_uci/{train_sites}__to__{test_site}/{model_key}/results.json` |
-| Predictions | `outputs/external_uci/{train_sites}__to__{test_site}/{model_key}/predictions.parquet` |
-| Trained model | `outputs/external_uci/{train_sites}__to__{test_site}/{model_key}/model.joblib` |
+| Predictions | `outputs/external_uci/.../predictions.parquet` (canonical), `predictions.csv` (optional) |
+| Trained model | `outputs/external_uci/.../model.joblib` |
+| Preprocessing pipeline | `outputs/external_uci/.../pipeline.joblib` (when present) |
 
 ---
 
@@ -456,6 +457,17 @@ def cfs_penalty(full_auc: float, cfs_auc: float) -> dict:
         "relative_drop_pct": ((full_auc - cfs_auc) / full_auc * 100) if full_auc > 0 else None,
     }
 ```
+
+#### 1.5.4  Outputs
+
+| Artifact | Path |
+|----------|------|
+| Per-experiment results | `outputs/external_kaggle_uci/{variant}/{train_site}__to__{test_site}/{model_key}/results.json` |
+| Predictions | `.../predictions.parquet` (canonical), `.../predictions.csv` (optional) |
+| Trained model | `.../model.joblib` |
+| Preprocessing pipeline | `.../pipeline.joblib` (when present) |
+
+Internal CFS baselines (Stage 1.5) write to `outputs/internal_cfs/{variant}/{site}/{model_key}/` with the same artifact set.
 
 ---
 
@@ -880,31 +892,57 @@ def compute_metrics(y_true, y_prob, y_pred) -> dict:
 
 ### Stage C.3  Artifact Serialization
 
+Every experiment (internal, internal_cfs, external_uci, external_kaggle_uci) persists the canonical set via `save_experiment()`:
+
+- **results.json** — all keys except predictions, fitted_model, fitted_pipeline; C.4 timestamp and optional config_hash
+- **predictions.parquet** (canonical) and **predictions.csv** (optional) when predictions present
+- **model.joblib** and **pipeline.joblib** when fitted_model / fitted_pipeline provided
+
+See `ImplementationPlan/pipeline_outputs.md` for the full artifact contract table.
+
 ```python
 # src/artifacts.py
 
 import json, joblib
 from pathlib import Path
+import pandas as pd
 
-def save_experiment(result: dict, base_dir: str = "outputs"):
+def save_experiment(result: dict, base_dir: str = "outputs", config_hash: str | None = None):
     exp_type = result["experiment_type"]
     if exp_type == "internal":
         path = Path(base_dir) / "internal" / result["site"] / result["model"]
+    elif exp_type == "internal_cfs":
+        path = Path(base_dir) / "internal_cfs" / (result.get("variant") or "cfs") / result["site"] / result["model"]
     elif exp_type == "external_uci":
         train_key = "+".join(sorted(result["train_sites"])) if isinstance(result["train_sites"], list) else result["train_sites"]
         path = Path(base_dir) / "external_uci" / f"{train_key}__to__{result['test_site']}" / result["model"]
     elif exp_type == "external_kaggle_uci":
-        path = Path(base_dir) / "external_kaggle_uci" / f"{result['train_site']}__to__{result['test_site']}" / result["model"]
+        path = Path(base_dir) / "external_kaggle_uci" / (result.get("variant") or "cfs") / f"{result['train_site']}__to__{result['test_site']}" / result["model"]
     else:
         path = Path(base_dir) / exp_type / result.get("id", "default")
 
     path.mkdir(parents=True, exist_ok=True)
 
+    payload = {k: v for k, v in result.items() if k not in ("predictions", "fitted_model", "fitted_pipeline")}
+    # C.4: timestamp; config_hash when provided
+    payload["timestamp"] = ...  # reproducibility.experiment_timestamp()
+    if config_hash is not None:
+        payload["config_hash"] = config_hash
     with open(path / "results.json", "w") as f:
-        json.dump({k: v for k, v in result.items() if k != "predictions"}, f, indent=2, default=str)
+        json.dump(payload, f, indent=2, default=str)
 
     if "predictions" in result:
-        pd.DataFrame(result["predictions"]).to_parquet(path / "predictions.parquet")
+        df = pd.DataFrame(result["predictions"])
+        df.to_parquet(path / "predictions.parquet", index=False)
+        df.to_csv(path / "predictions.csv", index=False, float_format="%.10g")
+
+    if exp_type in ("internal", "internal_cfs", "external_uci", "external_kaggle_uci"):
+        if "fitted_model" in result:
+            joblib.dump(result["fitted_model"], path / "model.joblib")
+        if "fitted_pipeline" in result:
+            joblib.dump(result["fitted_pipeline"], path / "pipeline.joblib")
+
+    return path
 ```
 
 ### Stage C.4  Reproducibility Controls
@@ -1034,7 +1072,7 @@ def run_pipeline(config_path: str = "configs/pipeline.yaml"):
 outputs/
 ├── internal/
 │   ├── kaggle/
-│   │   ├── lr/   { results.json, predictions.parquet, model.joblib, pipeline.joblib }
+│   │   ├── lr/   { results.json, predictions.parquet, predictions.csv, model.joblib, pipeline.joblib }
 │   │   ├── rf/
 │   │   ├── xgb/
 │   │   └── lgbm/

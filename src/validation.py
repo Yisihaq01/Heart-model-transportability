@@ -439,7 +439,7 @@ def run_external_uci_matrix(
 ) -> dict:
     """
     Stage 1.4: Train on one or more UCI sites, test on held-out UCI site.
-    Uses effective_cfs per (train, test) pair; saves results.json, predictions.parquet, model.joblib.
+    Uses effective_cfs per (train, test) pair; saves canonical artifact set (results.json, predictions.parquet, predictions.csv, model.joblib, pipeline.joblib when present).
     C.4: loads pipeline config for seed and config_hash when pipeline_config_path given.
     """
     data_dir = Path(data_dir)
@@ -539,7 +539,7 @@ def run_internal_validation(
 ) -> dict:
     """
     Stage 1.3: For every site × model, run internal split(s), tune, predict, compute metrics + bootstrap CIs,
-    save results.json, predictions.parquet, model.joblib, pipeline.joblib.
+    Saves canonical artifact set: results.json, predictions.parquet, predictions.csv, model.joblib, pipeline.joblib (when present).
     C.4: loads pipeline config for seed and config_hash; logs features_used, n_train, n_test, timestamp.
     """
     data_dir = Path(data_dir)

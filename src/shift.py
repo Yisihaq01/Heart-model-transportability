@@ -19,9 +19,14 @@ Reads:
 Writes:
 - Per-pair diagnostics under outputs/shift/{train_sites}__to__{test_site}/
   - shift_diagnostics.json
-  - feature_shift.parquet
-- Global correlation matrix:
-  - outputs/shift/shift_performance_correlation.parquet
+  - feature_shift.parquet (canonical per-pair feature table: PSI, KS/chi², missingness)
+  - feature_shift.csv
+- Cross-experiment summaries under outputs/shift/:
+  - shift_table.parquet / .csv — one row per external experiment (aggregate shift metrics)
+  - performance_table.parquet / .csv — one row per experiment (auc_drop, brier_change)
+  - shift_performance_merged.parquet / .csv — merged table linking shift metrics to performance drops
+  - shift_performance_correlation.parquet / .csv — Spearman correlation matrix of merged numeric cols
+  - cross_experiment_index.json — list of pair keys and relative paths to per-pair artifacts
 """
 from __future__ import annotations
 
@@ -277,7 +282,8 @@ def _load_internal_baseline_auc_brier(
 
 def shift_performance_correlation(shift_table: pd.DataFrame, perf_table: pd.DataFrame) -> pd.DataFrame:
     """Stage 1.6.5 — merge and compute Spearman rank correlations."""
-    merged = shift_table.merge(perf_table, on=["train_sites", "test_site"])
+    merge_keys = ["train_sites", "test_site", "model"]
+    merged = shift_table.merge(perf_table, on=merge_keys)
     cols = ["mean_psi", "prevalence_diff", "c2st_auc", "auc_drop", "brier_change"]
     cols = [c for c in cols if c in merged.columns]
     if len(cols) < 2:
@@ -309,6 +315,7 @@ def run_shift_diagnostics(
 
     shift_rows = []
     perf_rows = []
+    index_entries: List[dict] = []
 
     for exp in exps:
         # Load raw data for train/test sites
@@ -384,6 +391,19 @@ def run_shift_diagnostics(
                 default=str,
             )
         feature_shift_df.to_parquet(pair_dir / "feature_shift.parquet", index=False)
+        feature_shift_df.to_csv(pair_dir / "feature_shift.csv", index=False, float_format="%.6f")
+        index_entries.append({
+            "pair_key": pair_key,
+            "train_sites": exp.train_sites,
+            "test_site": exp.test_site,
+            "model": exp.model,
+            "experiment_type": exp.experiment_type,
+            "paths": {
+                "shift_diagnostics": "shift_diagnostics.json",
+                "feature_shift_parquet": "feature_shift.parquet",
+                "feature_shift_csv": "feature_shift.csv",
+            },
+        })
 
         shift_rows.append(
             {
@@ -426,10 +446,29 @@ def run_shift_diagnostics(
 
     shift_table = pd.DataFrame(shift_rows)
     perf_table = pd.DataFrame(perf_rows)
+    merge_keys = ["train_sites", "test_site", "model"]
+    merged = shift_table.merge(perf_table, on=merge_keys)
     corr = shift_performance_correlation(shift_table, perf_table)
 
+    def _write_parquet_csv(df: pd.DataFrame, base_path: Path) -> None:
+        if df.empty:
+            return
+        df.to_parquet(base_path.with_suffix(".parquet"), index=False)
+        df.to_csv(base_path.with_suffix(".csv"), index=False, float_format="%.6f")
+
+    _write_parquet_csv(shift_table, shift_root / "shift_table")
+    _write_parquet_csv(perf_table, shift_root / "performance_table")
+    _write_parquet_csv(merged, shift_root / "shift_performance_merged")
     if not corr.empty:
         corr.to_parquet(shift_root / "shift_performance_correlation.parquet")
+        corr.to_csv(shift_root / "shift_performance_correlation.csv", float_format="%.4f", index=True)
+
+    with open(shift_root / "cross_experiment_index.json", "w") as f:
+        json.dump(
+            {"pairs": index_entries, "note": "Per-pair paths are relative to outputs/shift/{pair_key}/"},
+            f,
+            indent=2,
+        )
 
     return {"shift_table": shift_table, "perf_table": perf_table, "correlation": corr}
 

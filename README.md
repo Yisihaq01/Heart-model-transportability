@@ -126,12 +126,26 @@ Heart-model-transportability/
 ├── Research Paper/           # Manuscript drafts
 ├── src/                      # Loading, cleaning, modeling, calibration, drift, evaluation (planned)
 ├── configs/                  # Run configs: site pairs, models, seeds (planned)
-├── outputs/                  # Tables, plots, saved models (planned)
+├── outputs/                  # Experiment artifacts: results, predictions, models (see below)
 ├── reports/                  # Markdown/HTML evaluation report — TRIPOD+AI aligned (planned)
 ├── app/                      # Transportability Dashboard — Streamlit/Dash (planned)
 ├── requirements.txt          # (planned)
 └── README.md
 ```
+
+### Canonical output artifacts
+
+Each experiment (internal, internal_cfs, external_uci, external_kaggle_uci) writes a consistent set under `outputs/`:
+
+| File | Meaning | Required / Optional |
+|------|---------|---------------------|
+| `results.json` | Metrics, hyperparameters, CIs, metadata | **Required** |
+| `predictions.parquet` | Hold-out predictions | **Canonical** |
+| `predictions.csv` | Same as parquet; convenience | Optional |
+| `model.joblib` | Fitted estimator | When model saved |
+| `pipeline.joblib` | Fitted preprocessing pipeline | When pipeline exists |
+
+Downstream stages add calibration, size_matched, and shift artifacts. Full paths and contract details: `ImplementationPlan/pipeline_outputs.md`.
 
 ## Deliverables
 
