@@ -76,4 +76,8 @@ Key finding: The CFS (common-feature-set) restriction incurs a mean AUC penalty 
 ### Appendix: PROBAST Risk Assessment
 
 Domain-level bias and applicability assessment per PROBAST+AI:
-[reports/compliance/PROBAST_RISK_ASSESSMENT.md](reports/compliance/PROBAST_RISK_ASSESSMENT.md)
+[reports/compliance/PROBAST_RISK_ASSESSMENT.md](compliance/PROBAST_RISK_ASSESSMENT.md)
+
+### Code and Data Availability
+
+All analysis code is available in this repository. Data sources: the [UCI Heart Disease dataset](https://archive.ics.uci.edu/dataset/45/heart+disease) (Cleveland, Hungary, Switzerland, VA) and the [Kaggle Cardiovascular Disease dataset](https://www.kaggle.com/datasets/sulianova/cardiovascular-disease-dataset). Both datasets are publicly available under their respective licenses.

@@ -921,7 +921,7 @@ def generate_report(
         "### Appendix: PROBAST Risk Assessment",
         "",
         "Domain-level bias and applicability assessment per PROBAST+AI:",
-        "[reports/compliance/PROBAST_RISK_ASSESSMENT.md](reports/compliance/PROBAST_RISK_ASSESSMENT.md)",
+        "[reports/compliance/PROBAST_RISK_ASSESSMENT.md](compliance/PROBAST_RISK_ASSESSMENT.md)",
         "",
     ])
 

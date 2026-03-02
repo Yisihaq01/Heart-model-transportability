@@ -1,4 +1,5 @@
 # Stage C.4: pin versions for reproducibility
+# For exact pinned versions (reproducibility), see requirements-pinned.txt
 pandas>=2.0,<3
 numpy>=1.24,<3
 pyyaml>=6.0
