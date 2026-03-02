@@ -9,7 +9,7 @@
 - {"worst_auc_drop": {"experiment_type": "external_kaggle_uci", "variant": "cfs", "train_sites": "kaggle", "test_site": "cleveland", "model": "rf", "n_train": 68726.0, "n_test": 303, "n_features_used": 3, "features_used": ["age", "sex", "sys_bp"], "best_params": {"max_depth": 5, "min_samples_leaf": 1}, "results_path": "outputs\\runs\\20260301T225358_93bf3a3395d35eb1\\external_kaggle_uci\\cfs\\kaggle__to__cleveland\\rf\\results.json", "roc_auc": 0.5758247060887876, "pr_auc": 0.5172796123437253, "brier_score": 0.28037867892819834, "accuracy": 0.5214521452145214, "f1": 0.5510835913312694, "precision": 0.483695652173913, "recall": 0.6402877697841727, "specificity": 0.42073170731707316, "prevalence": 0.45874587458745875, "ece": 0.18856575168869222, "mce": 0.32883212528203126, "roc_auc_ci_lower": 0.5072983720085065, "roc_auc_ci_upper": 0.6382705169559137, "pr_auc_ci_lower": 0.4433160033062054, "pr_auc_ci_upper": 0.6058006029742298, "brier_score_ci_lower": 0.25482190842318286, "brier_score_ci_upper": 0.30709983883536185, "accuracy_ci_lower": 0.46204620462046203, "accuracy_ci_upper": 0.5775577557755776, "ece_ci_lower": 0.1451610493088937, "ece_ci_upper": 0.25148474616589567, "cfs_full_auc": NaN, "cfs_cfs_auc": NaN, "cfs_auc_drop": NaN, "cfs_relative_drop_pct": NaN, "internal_auc": 0.9696969696969697, "auc_delta": -0.39387226360818217}, "mean_auc_drop": -0.09703801493417628}
 
 ### Rq3 Shift Performance
-- {"spearman_rho": NaN, "p_value": NaN}
+- {"spearman_rho": -0.19302784787140867, "p_value": 0.12646309490386784}
 
 ### Rq4 Recalibration
 - {"mean_ece_before": 0.2497037977421798, "mean_ece_after": 0.14090876986170303, "mean_improvement": 0.10879502788047676, "wilcoxon_stat": 18532.0, "p_value": 5.806936945336855e-19}
@@ -41,7 +41,7 @@ Mean AUC drop: -0.097
 
 ## 5. Results — RQ3: Dataset Shift
 
-Spearman ρ (mean PSI vs AUC drop): {'spearman_rho': nan, 'p_value': nan}
+Spearman ρ (mean PSI vs AUC drop): {'spearman_rho': -0.19302784787140867, 'p_value': 0.12646309490386784}
 
 ## 6. Results — RQ4: Recalibration
 
@@ -62,3 +62,8 @@ CFS penalty: {'mean_auc_drop': 0.16800983663825603, 'max_auc_drop': 0.3682608695
 - Full metric tables: reports/tables/master_results.csv
 - Statistical tests: reports/tables/statistical_tests.json
 - RQ summaries: reports/rq_summaries.json
+
+### Appendix: PROBAST Risk Assessment
+
+Domain-level bias and applicability assessment per PROBAST+AI:
+[reports/compliance/PROBAST_RISK_ASSESSMENT.md](reports/compliance/PROBAST_RISK_ASSESSMENT.md)

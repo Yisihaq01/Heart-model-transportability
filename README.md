@@ -111,6 +111,7 @@ Four cohorts sharing a common 14-attribute schema: **Cleveland** (processed 14-c
 |----------|----------|-------------|
 | **TRIPOD+AI Checklist** | [`reports/compliance/TRIPOD_AI_CHECKLIST.md`](reports/compliance/TRIPOD_AI_CHECKLIST.md) | 27-item checklist mapped to project files/sections |
 | **PROBAST Risk Assessment** | [`reports/compliance/PROBAST_RISK_ASSESSMENT.md`](reports/compliance/PROBAST_RISK_ASSESSMENT.md) | Domain-level bias/risk table with judgments and rationale |
+| **Evaluation Report (HTML)** | [`reports/evaluation_report.html`](reports/evaluation_report.html) | HTML export of the evaluation report (generated from `evaluation_report.md`) |
 
 ## Project Structure
 
@@ -136,7 +137,9 @@ Heart-model-transportability/
 ├── outputs/                  # Experiment artifacts: results, predictions, models (see below)
 ├── reports/                  # Evaluation report, compliance artifacts
 │   └── compliance/           # TRIPOD+AI checklist, PROBAST risk assessment
-├── app/                      # Transportability Dashboard — Streamlit/Dash (planned)
+├── app/                      # Transportability Dashboard (Streamlit)
+│   ├── dashboard.py         # Main app
+│   └── README.md            # Run: streamlit run app/dashboard.py
 ├── requirements.txt          # (planned)
 └── README.md
 ```
@@ -169,13 +172,14 @@ Downstream stages add calibration, size_matched, and shift artifacts. Full paths
 
 - Calibration/updating module with before-after comparisons
 - "Reliability improvements" analysis (recalibration-enough vs. feature-mismatch-blocked)
-- **Transportability Dashboard** (Streamlit/Dash):
+- **Transportability Dashboard** (Streamlit): `streamlit run app/dashboard.py`
   - Dataset/site overview
   - Internal (80/20) results
   - External validation matrix
   - Calibration before/after
   - Shift + overlap diagnostics
   - Exportable report/model card (TRIPOD+AI aligned)
+  - Reads from `outputs/runs/{run_id}/` (configurable run_id or latest)
 
 ## Known Limitations
 

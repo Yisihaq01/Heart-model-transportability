@@ -19,6 +19,17 @@ from . import plotting
 logger = logging.getLogger(__name__)
 
 
+def _sanitize_for_json(obj: Any) -> Any:
+    """Replace float nan/inf with None so JSON is valid."""
+    if isinstance(obj, dict):
+        return {k: _sanitize_for_json(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_sanitize_for_json(v) for v in obj]
+    if isinstance(obj, (np.floating, float)) and (np.isnan(obj) or np.isinf(obj)):
+        return None
+    return obj
+
+
 def _load_config() -> dict[str, Any]:
     import yaml
 
@@ -198,8 +209,9 @@ def run_statistical_tests(
         sp = pd.read_csv(shift_perf_path)
         # Normalize column names
         sp = sp.rename(columns=lambda c: c.strip() if isinstance(c, str) else c)
-        valid = sp.dropna(subset=["mean_psi", "auc_drop"], how="all")
-        if "auc_drop" in valid.columns and not valid["auc_drop"].isna().all():
+        # Only use rows with both mean_psi and auc_drop (excludes external_kaggle_uci with empty auc_drop)
+        valid = sp.dropna(subset=["mean_psi", "auc_drop"])
+        if len(valid) >= 2 and "auc_drop" in valid.columns:
             rho, p = spearmanr(valid["mean_psi"], valid["auc_drop"])
             results["shift_performance_mean_psi_vs_auc_drop"] = {"spearman_rho": float(rho), "p_value": float(p)}
         if "prevalence_diff" in valid.columns and "brier_change" in valid.columns:
@@ -349,6 +361,206 @@ def generate_all_figures(
         if "full_auc" in cfs_df.columns and cfs_df["full_auc"].notna().any():
             plotting.plot_cfs_penalty_bars(cfs_df, figures_dir, config)
 
+    # F10: Brier decomposition — from predictions
+    try:
+        decomp_rows = []
+        for results_path in root.rglob("results.json"):
+            pred_path = results_path.parent / "predictions.csv"
+            if not pred_path.exists():
+                pred_path = results_path.parent / "predictions.parquet"
+            if not pred_path.exists():
+                continue
+            try:
+                pred = pd.read_csv(pred_path) if pred_path.suffix == ".csv" else pd.read_parquet(pred_path)
+            except Exception:
+                continue
+            if "y_true" not in pred.columns or "y_prob" not in pred.columns:
+                continue
+            dec = plotting._brier_decomposition(pred["y_true"].values, pred["y_prob"].values)
+            exp_id = f"{results_path.parent.parent.name} {results_path.parent.name}"
+            decomp_rows.append({"experiment_id": exp_id, **dec})
+        if decomp_rows:
+            decomp_df = pd.DataFrame(decomp_rows)
+            # Limit to ~30 experiments for readability
+            if len(decomp_df) > 30:
+                decomp_df = decomp_df.head(30)
+            plotting.plot_brier_decomposition(decomp_df, figures_dir, config)
+    except Exception as e:
+        logger.debug("Skip F10 Brier decomposition: %s", e)
+
+    # F12: Feature distributions for worst pair
+    try:
+        if "auc_delta" in pivots:
+            delta = pivots["auc_delta"]
+            valid = delta.dropna(subset=["auc_delta"])
+            if not valid.empty:
+                worst = valid.loc[valid["auc_delta"].idxmin()]
+                train_sites = [s.strip() for s in str(worst.get("train_sites", "")).split("+")]
+                test_site = str(worst.get("test_site", ""))
+                data_dir = Path(__file__).resolve().parent.parent / "data"
+
+                def _load_site(site: str) -> pd.DataFrame | None:
+                    prefix = "kaggle_clean" if site == "kaggle" else f"uci_{site}_clean"
+                    for ext in (".parquet", ".csv"):
+                        p = data_dir / f"{prefix}{ext}"
+                        if p.exists():
+                            return pd.read_parquet(p) if ext == ".parquet" else pd.read_csv(p)
+                    return None
+
+                train_dfs = [_load_site(ts) for ts in train_sites]
+                train_dfs = [d for d in train_dfs if d is not None]
+                test_df = _load_site(test_site)
+                if train_dfs and test_df is not None:
+                    train_df = pd.concat(train_dfs, ignore_index=True) if len(train_dfs) > 1 else train_dfs[0]
+                    pair_key = f"{worst['train_sites']}__to__{test_site}"
+                    fs_path = (root / "shift" / pair_key / "feature_shift.csv")
+                    if not fs_path.exists() and (root / "shift").exists():
+                        for d in (root / "shift").iterdir():
+                            if d.is_dir():
+                                fp = d / "feature_shift.csv"
+                                if fp.exists() and test_site in d.name:
+                                    fs_path = fp
+                                    break
+                    features = []
+                    if fs_path and fs_path.exists():
+                        fs = pd.read_csv(fs_path)
+                        if "feature" in fs.columns:
+                            features = fs["feature"].tolist()
+                    if not features:
+                        features = [c for c in train_df.columns if c in test_df.columns and c not in ("site", "target", "num")]
+                    if features:
+                        pair_name = f"{worst['train_sites']} → {test_site}"
+                        plotting.plot_feature_distributions_worst_pair(
+                            train_df, test_df, features[:9], pair_name, figures_dir, config
+                        )
+    except Exception as e:
+        logger.debug("Skip F12 feature distributions: %s", e)
+
+    # F14: Missingness heatmap — from ingestion_report.json
+    try:
+        report_path = Path(__file__).resolve().parent.parent / "data" / "ingestion_report.json"
+        if report_path.exists():
+            with open(report_path) as f:
+                report = json.load(f)
+            sites_meta = report.get("sites", {})
+            all_features = set()
+            for site, meta in sites_meta.items():
+                all_features.update(meta.get("missing_rates", {}).keys())
+            all_features.update(report.get("cfs_uci_cross_site", []))
+            all_features.update(report.get("cfs_kaggle_uci", []))
+            all_features.discard("target")
+            rows = []
+            for feat in sorted(all_features):
+                row = {}
+                for site in sites_meta:
+                    mr = sites_meta[site].get("missing_rates", {})
+                    val = mr.get(feat, mr.get("sys_bp" if feat == "trestbps" else "trestbps" if feat == "sys_bp" else None, 0))
+                    row[site] = float(val) if val is not None else 0
+                rows.append(row)
+            if rows:
+                miss_df = pd.DataFrame(rows, index=sorted(all_features))
+                miss_df = miss_df.reindex(columns=sorted(sites_meta.keys()))
+                plotting.plot_missingness_heatmap(miss_df, figures_dir, config)
+    except Exception as e:
+        logger.debug("Skip F14 missingness heatmap: %s", e)
+
+    # F15: C2ST vs external AUC
+    try:
+        sp_path = root / "shift" / "shift_performance_merged.csv"
+        if sp_path.exists():
+            sp = pd.read_csv(sp_path)
+            sp = sp.rename(columns=lambda c: c.strip() if isinstance(c, str) else c)
+            if "roc_auc" not in sp.columns and not master.empty:
+                merge_cols = ["train_sites", "test_site", "model"]
+                ext = master[master["experiment_type"].str.startswith("external", na=False)][merge_cols + ["roc_auc"]]
+                sp = sp.merge(ext, on=merge_cols, how="left", suffixes=("", "_y"))
+            plotting.plot_c2st_vs_auc(sp, figures_dir, config)
+    except Exception as e:
+        logger.debug("Skip F15 C2ST vs AUC: %s", e)
+
+    # F17: Size-matched comparison
+    try:
+        sm_dir = root / "size_matched"
+        if sm_dir.exists():
+            rows = []
+            for pair_dir in sm_dir.iterdir():
+                if not pair_dir.is_dir():
+                    continue
+                pair_name = pair_dir.name.replace("__", " → ")
+                for model_file in pair_dir.glob("*.json"):
+                    try:
+                        with open(model_file) as f:
+                            d = json.load(f)
+                    except (json.JSONDecodeError, OSError):
+                        continue
+                    sm = d.get("metrics_mean", {})
+                    train_sites = d.get("train_sites", [])
+                    if isinstance(train_sites, list):
+                        train_sites = "+".join(train_sites)
+                    test_site = d.get("test_site", "")
+                    full_auc = None
+                    res_path = root / "external_uci" / pair_dir.name / model_file.stem / "results.json"
+                    if res_path.exists():
+                        with open(res_path) as rf:
+                            rr = json.load(rf)
+                        full_auc = rr.get("metrics", {}).get("roc_auc")
+                    if full_auc is None and "auc_delta" in pivots:
+                        delta = pivots["auc_delta"]
+                        match = delta[(delta["train_sites"] == train_sites) & (delta["test_site"] == test_site) & (delta["model"] == model_file.stem)]
+                        if not match.empty:
+                            full_auc = match["roc_auc"].iloc[0]
+                    rows.append({
+                        "pair_model": f"{pair_name} {model_file.stem}",
+                        "full_auc": full_auc or sm.get("roc_auc"),
+                        "subsampled_mean": sm.get("roc_auc"),
+                        "subsampled_std": d.get("metrics_std", {}).get("roc_auc", 0),
+                    })
+            if rows:
+                sm_df = pd.DataFrame(rows)
+                sm_df = sm_df[sm_df["full_auc"].notna() | sm_df["subsampled_mean"].notna()]
+                if not sm_df.empty:
+                    sm_df["full_auc"] = sm_df["full_auc"].fillna(sm_df["subsampled_mean"])
+                    sm_df["subsampled_mean"] = sm_df["subsampled_mean"].fillna(sm_df["full_auc"])
+                    plotting.plot_size_matched_comparison(sm_df.head(40), figures_dir, config)
+    except Exception as e:
+        logger.debug("Skip F17 size-matched: %s", e)
+
+    # F18: Effective CFS feature count
+    try:
+        report_path = Path(__file__).resolve().parent.parent / "data" / "ingestion_report.json"
+        pipeline_cfg_path = Path(__file__).resolve().parent.parent / "configs" / "pipeline.yaml"
+        if report_path.exists():
+            with open(report_path) as f:
+                report = json.load(f)
+            import yaml
+            threshold_pct = 40.0
+            if pipeline_cfg_path.exists():
+                with open(pipeline_cfg_path) as f:
+                    pc = yaml.safe_load(f) or {}
+                threshold_pct = float(pc.get("missingness_threshold", 0.40) * 100)
+            sites_meta = report.get("sites", {})
+            cfs_uci = report.get("cfs_uci_cross_site", [])
+            cfs_ku = report.get("cfs_kaggle_uci", [])
+            uci_sites = [s for s in ("cleveland", "hungary", "switzerland", "va") if s in sites_meta]
+            pair_counts = []
+            for train in uci_sites:
+                for test in uci_sites:
+                    if train == test:
+                        continue
+                    n = sum(1 for f in cfs_uci if sites_meta.get(train, {}).get("missing_rates", {}).get(f, 0) < threshold_pct and sites_meta.get(test, {}).get("missing_rates", {}).get(f, 0) < threshold_pct)
+                    pair_counts.append({"pair": f"{train}→{test}", "n_features": n})
+            for train in ["kaggle"] + uci_sites:
+                for test in ["kaggle"] + uci_sites:
+                    if train == test:
+                        continue
+                    if (train == "kaggle" and test in uci_sites) or (test == "kaggle" and train in uci_sites):
+                        n = sum(1 for f in cfs_ku if sites_meta.get(train, {}).get("missing_rates", {}).get(f, 0) < threshold_pct and sites_meta.get(test, {}).get("missing_rates", {}).get(f, 0) < threshold_pct)
+                        pair_counts.append({"pair": f"{train}→{test}", "n_features": n})
+            if pair_counts:
+                plotting.plot_effective_cfs_count(pd.DataFrame(pair_counts), figures_dir, config)
+    except Exception as e:
+        logger.debug("Skip F18 effective CFS: %s", e)
+
 
 def synthesize_rq_answers(
     master: pd.DataFrame,
@@ -394,6 +606,34 @@ def synthesize_rq_answers(
             }
 
     return summaries
+
+
+def _export_report_html(reports_dir: Path) -> None:
+    """Convert evaluation_report.md to HTML. See eval_plan §8.2."""
+    md_path = reports_dir / "evaluation_report.md"
+    html_path = reports_dir / "evaluation_report.html"
+    if not md_path.exists():
+        return
+    try:
+        import markdown
+    except ImportError:
+        logger.warning("markdown package not installed; skipping HTML export. pip install markdown")
+        return
+    template = (
+        '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">'
+        '<meta name="viewport" content="width=device-width, initial-scale=1.0">'
+        '<title>Evaluation Report — Heart Disease Model Transportability</title>'
+        '<style>body{{font-family:system-ui,sans-serif;max-width:900px;margin:2rem auto;padding:0 1rem;line-height:1.6}}'
+        'h1{{border-bottom:1px solid #ccc}}h2{{margin-top:1.5em}}'
+        'table{{border-collapse:collapse;width:100%}}th,td{{border:1px solid #ddd;padding:.5em .75em;text-align:left}}'
+        'th{{background:#f5f5f5}}tr:nth-child(even){{background:#fafafa}}'
+        'code{{background:#f0f0f0;padding:.15em .4em;border-radius:3px}}a{{color:#0066cc}}</style>'
+        "</head><body>{body}</body></html>"
+    )
+    md_text = md_path.read_text(encoding="utf-8")
+    html_body = markdown.markdown(md_text, extensions=["tables", "fenced_code"], output_format="html5")
+    html_path.write_text(template.format(body=html_body), encoding="utf-8")
+    logger.info("Wrote %s", html_path)
 
 
 def generate_report(
@@ -484,6 +724,11 @@ def generate_report(
         "- Statistical tests: reports/tables/statistical_tests.json",
         "- RQ summaries: reports/rq_summaries.json",
         "",
+        "### Appendix: PROBAST Risk Assessment",
+        "",
+        "Domain-level bias and applicability assessment per PROBAST+AI:",
+        "[reports/compliance/PROBAST_RISK_ASSESSMENT.md](reports/compliance/PROBAST_RISK_ASSESSMENT.md)",
+        "",
     ])
 
     report_path = reports_dir / "evaluation_report.md"
@@ -500,8 +745,8 @@ def run_evaluation(
     """Main entry point: aggregate, pivot, test, figure, synthesize, report."""
     config = _load_config()
     reports_path = Path(reports_dir or config.get("reports_dir", "reports"))
-    figures_path = Path(config.get("figures_dir", str(reports_path / "figures")))
-    tables_path = Path(config.get("tables_dir", str(reports_path / "tables")))
+    figures_path = reports_path / "figures"
+    tables_path = reports_path / "tables"
     figures_path.mkdir(parents=True, exist_ok=True)
     tables_path.mkdir(parents=True, exist_ok=True)
 
@@ -527,7 +772,7 @@ def run_evaluation(
     # 3. Statistical tests
     stat_results = run_statistical_tests(master, outputs_dir, run_id)
     with open(tables_path / "statistical_tests.json", "w", encoding="utf-8") as f:
-        json.dump(stat_results, f, indent=2, default=str)
+        json.dump(_sanitize_for_json(stat_results), f, indent=2, default=str)
 
     # 4. Figures
     generate_all_figures(master, outputs_dir, figures_path, config, run_id)
@@ -539,6 +784,9 @@ def run_evaluation(
 
     # 6. Report
     generate_report(master, pivots, stat_results, rq_summaries, reports_path)
+
+    # 7. HTML export
+    _export_report_html(reports_path)
 
     return master
 

@@ -85,8 +85,8 @@
     "mean_auc_drop": -0.09703801493417628
   },
   "rq3_shift_performance": {
-    "spearman_rho": NaN,
-    "p_value": NaN
+    "spearman_rho": -0.19302784787140867,
+    "p_value": 0.12646309490386784
   },
   "rq4_recalibration": {
     "mean_ece_before": 0.2497037977421798,

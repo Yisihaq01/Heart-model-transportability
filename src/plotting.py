@@ -346,3 +346,240 @@ def plot_pr_curves_by_model(
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     _save_fig(fig, output_path, formats, dpi)
+
+
+def _brier_decomposition(y_true: np.ndarray, y_prob: np.ndarray, n_bins: int = 10) -> dict[str, float]:
+    """Murphy decomposition: Brier = REL - RES + UNC."""
+    y_true = np.asarray(y_true)
+    y_prob = np.asarray(y_prob)
+    n = len(y_true)
+    if n == 0:
+        return {"reliability": 0.0, "resolution": 0.0, "uncertainty": 0.0, "brier": 0.0}
+    o_bar = float(y_true.mean())
+    unc = o_bar * (1 - o_bar)
+    bin_edges = np.linspace(0, 1, n_bins + 1)
+    rel, res = 0.0, 0.0
+    for lo, hi in zip(bin_edges[:-1], bin_edges[1:]):
+        mask = (y_prob >= lo) & (y_prob < hi)
+        if mask.sum() == 0:
+            continue
+        nk = mask.sum()
+        ok = y_true[mask].sum()
+        pk = (lo + hi) / 2
+        o_k = ok / nk
+        rel += (nk / n) * (o_k - pk) ** 2
+        res += (nk / n) * (o_k - o_bar) ** 2
+    brier = float(np.mean((y_prob - y_true) ** 2))
+    return {"reliability": rel, "resolution": res, "uncertainty": unc, "brier": brier}
+
+
+def plot_brier_decomposition(
+    decomp_df: pd.DataFrame,
+    output_dir: Path,
+    config: dict[str, Any] | None = None,
+) -> None:
+    """Stacked bar: Brier = reliability + resolution + uncertainty (F10)."""
+    config = config or {}
+    formats = config.get("figure_format", ["pdf", "png"])
+    dpi = config.get("figure_dpi", 300)
+
+    if decomp_df.empty or "reliability" not in decomp_df.columns:
+        return
+
+    fig, ax = plt.subplots(figsize=(12, 6))
+    x = np.arange(len(decomp_df))
+    width = 0.6
+    rel = decomp_df["reliability"].values
+    res = decomp_df["resolution"].values
+    unc = decomp_df["uncertainty"].values
+    bottom = rel
+    ax.bar(x, rel, width, label="Reliability", color="tab:red", alpha=0.8)
+    ax.bar(x, unc - res, width, bottom=bottom, label="Uncertainty − Resolution", color="tab:gray", alpha=0.6)
+    ax.set_xticks(x)
+    labels = decomp_df.get("experiment_id", [str(i) for i in range(len(decomp_df))])
+    ax.set_xticklabels(labels, rotation=45, ha="right")
+    ax.set_ylabel("Brier decomposition")
+    ax.set_title("Brier Score Decomposition (Reliability + Uncertainty − Resolution)")
+    ax.legend()
+    _save_fig(fig, output_dir / "brier_decomposition", formats, dpi)
+
+
+def plot_feature_distributions_worst_pair(
+    train_df: pd.DataFrame,
+    test_df: pd.DataFrame,
+    features: list[str],
+    pair_name: str,
+    output_dir: Path,
+    config: dict[str, Any] | None = None,
+) -> None:
+    """Overlaid histograms/KDE: train vs test for worst pair (F12)."""
+    config = config or {}
+    formats = config.get("figure_format", ["pdf", "png"])
+    dpi = config.get("figure_dpi", 300)
+
+    if not features:
+        return
+
+    n_feat = len(features)
+    n_cols = min(3, n_feat)
+    n_rows = (n_feat + n_cols - 1) // n_cols
+    fig, axes = plt.subplots(n_rows, n_cols, figsize=(4 * n_cols, 3 * n_rows))
+    if n_feat == 1:
+        axes = np.array([[axes]])
+    elif n_rows == 1:
+        axes = axes.reshape(1, -1)
+
+    for idx, feat in enumerate(features):
+        r, c = idx // n_cols, idx % n_cols
+        ax = axes[r, c]
+        if feat in train_df.columns and feat in test_df.columns:
+            tr = train_df[feat].dropna()
+            te = test_df[feat].dropna()
+            if len(tr) > 0 and len(te) > 0:
+                if HAS_SEABORN:
+                    sns.kdeplot(tr, ax=ax, label="Train", color="tab:blue")
+                    sns.kdeplot(te, ax=ax, label="Test", color="tab:orange")
+                else:
+                    ax.hist(tr, bins=15, alpha=0.5, label="Train", color="tab:blue", density=True)
+                    ax.hist(te, bins=15, alpha=0.5, label="Test", color="tab:orange", density=True)
+        ax.set_title(feat)
+        ax.legend(loc="upper right", fontsize=8)
+        ax.set_xlabel("")
+
+    for idx in range(n_feat, n_rows * n_cols):
+        r, c = idx // n_cols, idx % n_cols
+        axes[r, c].set_visible(False)
+
+    fig.suptitle(f"Feature Distributions — {pair_name} (Worst AUC Drop)", fontsize=12)
+    fig.tight_layout()
+    safe_name = pair_name.replace(" ", "_").replace("+", "_").replace("→", "_to_").replace("__", "_")
+    _save_fig(fig, output_dir / f"feature_distributions_{safe_name}", formats, dpi)
+
+
+def plot_missingness_heatmap(
+    missingness_matrix: pd.DataFrame,
+    output_dir: Path,
+    config: dict[str, Any] | None = None,
+) -> None:
+    """Heatmap: feature × site missing % (F14)."""
+    config = config or {}
+    formats = config.get("figure_format", ["pdf", "png"])
+    dpi = config.get("figure_dpi", 300)
+
+    if missingness_matrix.empty:
+        return
+
+    fig, ax = plt.subplots(figsize=(10, 8))
+    if HAS_SEABORN:
+        sns.heatmap(
+            missingness_matrix,
+            annot=True,
+            fmt=".1f",
+            cmap="YlOrRd",
+            vmin=0,
+            vmax=100,
+            linewidths=0.5,
+            ax=ax,
+        )
+    else:
+        im = ax.imshow(missingness_matrix.values, cmap="YlOrRd", vmin=0, vmax=100, aspect="auto")
+        ax.set_xticks(range(len(missingness_matrix.columns)))
+        ax.set_xticklabels(missingness_matrix.columns, rotation=45, ha="right")
+        ax.set_yticks(range(len(missingness_matrix.index)))
+        ax.set_yticklabels(missingness_matrix.index)
+        for i in range(len(missingness_matrix.index)):
+            for j in range(len(missingness_matrix.columns)):
+                ax.text(j, i, f"{missingness_matrix.values[i, j]:.1f}", ha="center", va="center")
+        plt.colorbar(im, ax=ax)
+    ax.set_title("Missingness % by Feature × Site")
+    _save_fig(fig, output_dir / "missingness_heatmap", formats, dpi)
+
+
+def plot_c2st_vs_auc(
+    df: pd.DataFrame,
+    output_dir: Path,
+    config: dict[str, Any] | None = None,
+) -> None:
+    """Scatter: C2ST AUC vs external ROC-AUC (F15)."""
+    config = config or {}
+    formats = config.get("figure_format", ["pdf", "png"])
+    dpi = config.get("figure_dpi", 300)
+
+    valid = df.dropna(subset=["c2st_auc", "roc_auc"])
+    if valid.empty or len(valid) < 2:
+        return
+
+    fig, ax = plt.subplots(figsize=(6, 5))
+    hue_col = "test_site" if "test_site" in df.columns else None
+    if HAS_SEABORN and hue_col:
+        sns.scatterplot(data=valid, x="c2st_auc", y="roc_auc", hue=hue_col, s=80, ax=ax)
+    else:
+        ax.scatter(valid["c2st_auc"], valid["roc_auc"], s=80)
+    ax.set_xlabel("C2ST AUC (train vs test discriminability)")
+    ax.set_ylabel("External ROC-AUC")
+    ax.set_title("C2ST vs External Validation AUC")
+    ax.axhline(0.5, color="k", linestyle="--", alpha=0.5)
+    ax.axvline(0.5, color="k", linestyle="--", alpha=0.5)
+    _save_fig(fig, output_dir / "c2st_vs_auc", formats, dpi)
+
+
+def plot_size_matched_comparison(
+    comparison_df: pd.DataFrame,
+    output_dir: Path,
+    config: dict[str, Any] | None = None,
+) -> None:
+    """Bar chart: full AUC vs subsampled mean AUC with error bars (F17)."""
+    config = config or {}
+    formats = config.get("figure_format", ["pdf", "png"])
+    dpi = config.get("figure_dpi", 300)
+
+    if comparison_df.empty or "full_auc" not in comparison_df.columns:
+        return
+
+    fig, ax = plt.subplots(figsize=(12, 6))
+    df = comparison_df
+    x = np.arange(len(df))
+    width = 0.35
+    ax.bar(x - width / 2, df["full_auc"], width, label="Full training", color="tab:blue", alpha=0.8)
+    ax.bar(
+        x + width / 2,
+        df["subsampled_mean"],
+        width,
+        yerr=df.get("subsampled_std", 0),
+        label="Size-matched (K subsamples)",
+        color="tab:orange",
+        alpha=0.8,
+        capsize=3,
+    )
+    ax.set_xticks(x)
+    ax.set_xticklabels(df.get("pair_model", range(len(df))), rotation=45, ha="right")
+    ax.set_ylabel("ROC-AUC")
+    ax.set_title("Size-Matched Comparison: Full vs Subsampled Training")
+    ax.legend()
+    ax.set_ylim(0, 1.05)
+    _save_fig(fig, output_dir / "size_matched_boxplot", formats, dpi)
+
+
+def plot_effective_cfs_count(
+    pair_counts: pd.DataFrame,
+    output_dir: Path,
+    config: dict[str, Any] | None = None,
+) -> None:
+    """Bar chart: effective CFS feature count per site pair (F18)."""
+    config = config or {}
+    formats = config.get("figure_format", ["pdf", "png"])
+    dpi = config.get("figure_dpi", 300)
+
+    if pair_counts.empty or "pair" not in pair_counts.columns or "n_features" not in pair_counts.columns:
+        return
+
+    fig, ax = plt.subplots(figsize=(12, 6))
+    pairs = pair_counts["pair"].values
+    counts = pair_counts["n_features"].values
+    x = np.arange(len(pairs))
+    ax.bar(x, counts, color="tab:green", alpha=0.7)
+    ax.set_xticks(x)
+    ax.set_xticklabels(pairs, rotation=45, ha="right")
+    ax.set_ylabel("Effective CFS feature count")
+    ax.set_title("Usable Features per Site Pair (after 40% missingness filter)")
+    _save_fig(fig, output_dir / "effective_cfs_features", formats, dpi)
