@@ -1,0 +1,7 @@
+test_site,lgbm,lr,rf,xgb
+cleveland,0.947,0.963,0.97,0.948
+cleveland+hungary+switzerland+va,0.706,0.707,0.714,0.691
+hungary,0.902,0.872,0.883,0.904
+kaggle,0.797,0.785,0.796,0.796
+switzerland,0.696,0.724,0.722,0.759
+va,0.647,0.823,0.667,0.693

@@ -1,0 +1,80 @@
+{
+  "experiment_type": "external_uci",
+  "train_sites": [
+    "va"
+  ],
+  "test_site": "cleveland",
+  "model": "lgbm",
+  "features_used": [
+    "age",
+    "sex",
+    "cp",
+    "trestbps",
+    "chol",
+    "fbs",
+    "restecg",
+    "thalach",
+    "exang",
+    "oldpeak"
+  ],
+  "n_train": 200,
+  "n_test": 303,
+  "best_params": {
+    "num_leaves": 63,
+    "max_depth": 7,
+    "learning_rate": 0.01
+  },
+  "metrics": {
+    "roc_auc": 0.8041761712581155,
+    "pr_auc": 0.8083784306231123,
+    "brier_score": 0.2410354176870987,
+    "accuracy": 0.5973597359735974,
+    "f1": 0.6855670103092784,
+    "precision": 0.5341365461847389,
+    "recall": 0.9568345323741008,
+    "specificity": 0.2926829268292683,
+    "confusion_matrix": [
+      [
+        48,
+        116
+      ],
+      [
+        6,
+        133
+      ]
+    ],
+    "n_test": 303,
+    "prevalence": 0.45874587458745875,
+    "ece": 0.23791538894342618,
+    "mce": 0.4180801272805002
+  },
+  "bootstrap_cis": {
+    "roc_auc": {
+      "point": 0.8041761712581155,
+      "ci_lower": 0.7549176249447147,
+      "ci_upper": 0.8498438446480555
+    },
+    "pr_auc": {
+      "point": 0.8083784306231123,
+      "ci_lower": 0.7545830590678957,
+      "ci_upper": 0.8624717513463738
+    },
+    "brier_score": {
+      "point": 0.2410354176870987,
+      "ci_lower": 0.21791945195702617,
+      "ci_upper": 0.26445712504066404
+    },
+    "accuracy": {
+      "point": 0.5973597359735974,
+      "ci_lower": 0.5412541254125413,
+      "ci_upper": 0.6468646864686468
+    },
+    "ece": {
+      "point": 0.23791538894342618,
+      "ci_lower": 0.19200507270208847,
+      "ci_upper": 0.28517225063244434
+    }
+  },
+  "timestamp": "2026-03-01T23:03:08Z",
+  "config_hash": "93bf3a3395d35eb1"
+}

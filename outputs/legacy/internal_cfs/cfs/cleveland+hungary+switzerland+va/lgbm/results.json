@@ -1,0 +1,73 @@
+{
+  "experiment_type": "internal_cfs",
+  "variant": "cfs",
+  "site": "cleveland+hungary+switzerland+va",
+  "model": "lgbm",
+  "features_used": [
+    "age",
+    "sex",
+    "sys_bp"
+  ],
+  "metrics": {
+    "roc_auc": 0.7060019129603061,
+    "pr_auc": 0.7581287332737927,
+    "brier_score": 0.2178662949947601,
+    "accuracy": 0.6630434782608695,
+    "f1": 0.7280701754385965,
+    "precision": 0.6587301587301587,
+    "recall": 0.8137254901960784,
+    "specificity": 0.47560975609756095,
+    "confusion_matrix": [
+      [
+        39,
+        43
+      ],
+      [
+        19,
+        83
+      ]
+    ],
+    "n_test": 184,
+    "prevalence": 0.5543478260869565,
+    "ece": 0.07693843152619505,
+    "mce": 0.18984007719525547
+  },
+  "bootstrap_cis": {
+    "roc_auc": {
+      "point": 0.7060019129603061,
+      "ci_lower": 0.6353109975961538,
+      "ci_upper": 0.778192965210065
+    },
+    "pr_auc": {
+      "point": 0.7581287332737927,
+      "ci_lower": 0.6818568976977233,
+      "ci_upper": 0.8319409860783721
+    },
+    "brier_score": {
+      "point": 0.2178662949947601,
+      "ci_lower": 0.1901834885620407,
+      "ci_upper": 0.24375144379177074
+    },
+    "accuracy": {
+      "point": 0.6630434782608695,
+      "ci_lower": 0.5978260869565217,
+      "ci_upper": 0.7256793478260868
+    },
+    "ece": {
+      "point": 0.07693843152619505,
+      "ci_lower": 0.0545098285496722,
+      "ci_upper": 0.1454963557218906
+    }
+  },
+  "best_params": {
+    "num_leaves": 15,
+    "max_depth": 3,
+    "learning_rate": 0.01
+  },
+  "cfs_penalty": {
+    "full_auc": null,
+    "cfs_auc": 0.7060019129603061,
+    "auc_drop": null,
+    "relative_drop_pct": null
+  }
+}

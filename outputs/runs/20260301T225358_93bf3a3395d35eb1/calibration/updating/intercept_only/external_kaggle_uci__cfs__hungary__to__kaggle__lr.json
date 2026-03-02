@@ -1,0 +1,70 @@
+{
+  "experiment_type": "external_kaggle_uci",
+  "model": "lr",
+  "variant": "intercept_only",
+  "split_mode": "holdout",
+  "n_calibration": 34363,
+  "n_evaluation": 34363,
+  "metrics_before": {
+    "brier_score": 0.2665954018462492,
+    "ece": 0.13853946098860898,
+    "mce": 0.13853946098860898,
+    "bin_details": [
+      {
+        "lo": 0.30000000000000004,
+        "hi": 0.4,
+        "acc": 0.4941070337281378,
+        "conf": 0.3555675727395288,
+        "n": 34363
+      }
+    ],
+    "calibration_curve": {
+      "fraction_pos": [
+        0.4941070337281378
+      ],
+      "mean_predicted": [
+        0.35556757273952116
+      ]
+    }
+  },
+  "metrics_after": {
+    "brier_score": 0.26720994916627483,
+    "ece": 0.1407158894919573,
+    "mce": 0.1407158894919573,
+    "bin_details": [
+      {
+        "lo": 0.30000000000000004,
+        "hi": 0.4,
+        "acc": 0.4941070337281378,
+        "conf": 0.3533911442361805,
+        "n": 34363
+      }
+    ],
+    "calibration_curve": {
+      "fraction_pos": [
+        0.4941070337281378
+      ],
+      "mean_predicted": [
+        0.3533911442361843
+      ]
+    }
+  },
+  "improvement": {
+    "brier_delta": -0.0006145473200256379,
+    "ece_delta": -0.0021764285033483155,
+    "mce_delta": -0.0021764285033483155
+  },
+  "per_fold_params": [
+    {
+      "intercept": -0.009516307609346386,
+      "slope": 1.0
+    }
+  ],
+  "mean_params": {
+    "intercept": -0.009516307609346386,
+    "slope": 1.0
+  },
+  "train_site": "hungary",
+  "test_site": "kaggle",
+  "experiment_variant": "cfs"
+}

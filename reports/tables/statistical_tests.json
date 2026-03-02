@@ -1,0 +1,17 @@
+{
+  "shift_performance_mean_psi_vs_auc_drop": {
+    "spearman_rho": NaN,
+    "p_value": NaN
+  },
+  "shift_performance_prevalence_vs_brier": {
+    "spearman_rho": 0.35855845844221157,
+    "p_value": 0.0036219043543778517
+  },
+  "recalibration_wilcoxon": {
+    "mean_ece_before": 0.2497037977421798,
+    "mean_ece_after": 0.14090876986170303,
+    "mean_improvement": 0.10879502788047676,
+    "wilcoxon_stat": 18532.0,
+    "p_value": 5.806936945336855e-19
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "train_sites": [
+    "hungary"
+  ],
+  "test_site": "switzerland",
+  "model": "xgb",
+  "experiment_type": "external_uci",
+  "prevalence_shift": {
+    "train_prevalence": 0.36054421768707484,
+    "test_prevalence": 0.9349593495934959,
+    "absolute_diff": 0.574415131906421
+  },
+  "mean_psi": 0.36450999796490824,
+  "c2st_auc": 0.839785115916618
+}

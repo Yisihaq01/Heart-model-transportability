@@ -1,0 +1,28 @@
+# configs/evaluation.yaml — Evaluation pipeline settings (eval_plan §7.3)
+
+reports_dir: reports
+figures_dir: reports/figures
+tables_dir: reports/tables
+
+figure_format: [pdf, png]
+figure_dpi: 300
+
+significance_alpha: 0.05
+bootstrap_B_comparison: 2000
+
+color_palette:
+  lr: "#1f77b4"
+  rf: "#2ca02c"
+  xgb: "#ff7f0e"
+  lgbm: "#d62728"
+
+site_display_names:
+  kaggle: "Kaggle CVD"
+  cleveland: "Cleveland"
+  hungary: "Hungary"
+  va: "VA Long Beach"
+  switzerland: "Switzerland"
+
+heatmap_cmap: RdYlGn
+heatmap_vmin: 0.5
+heatmap_vmax: 1.0

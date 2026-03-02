@@ -1,0 +1,15 @@
+{
+  "train_sites": [
+    "switzerland"
+  ],
+  "test_site": "va",
+  "model": "xgb",
+  "experiment_type": "external_uci",
+  "prevalence_shift": {
+    "train_prevalence": 0.9349593495934959,
+    "test_prevalence": 0.745,
+    "absolute_diff": 0.18995934959349592
+  },
+  "mean_psi": 0.2090816195159643,
+  "c2st_auc": 0.732675
+}

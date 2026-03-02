@@ -1,0 +1,100 @@
+{
+  "experiment_type": "external_uci",
+  "model": "lr",
+  "variant": "intercept_only",
+  "split_mode": "holdout",
+  "n_calibration": 151,
+  "n_evaluation": 152,
+  "metrics_before": {
+    "brier_score": 0.5366595298431506,
+    "ece": 0.5427016329260481,
+    "mce": 0.8161641272538076,
+    "bin_details": [
+      {
+        "lo": 0.8,
+        "hi": 0.9,
+        "acc": 0.0,
+        "conf": 0.8161641272538076,
+        "n": 1
+      },
+      {
+        "lo": 0.9,
+        "hi": 1.0,
+        "acc": 0.4503311258278146,
+        "conf": 0.9912217488576524,
+        "n": 151
+      }
+    ],
+    "calibration_curve": {
+      "fraction_pos": [
+        0.0,
+        0.4503311258278146
+      ],
+      "mean_predicted": [
+        0.8161641272538076,
+        0.9912217488576525
+      ]
+    }
+  },
+  "metrics_after": {
+    "brier_score": 0.5348291521770334,
+    "ece": 0.5415157900793547,
+    "mce": 0.8985993565195526,
+    "bin_details": [
+      {
+        "lo": 0.7000000000000001,
+        "hi": 0.8,
+        "acc": 0.0,
+        "conf": 0.7975350242915666,
+        "n": 1
+      },
+      {
+        "lo": 0.8,
+        "hi": 0.9,
+        "acc": 0.0,
+        "conf": 0.8985993565195526,
+        "n": 1
+      },
+      {
+        "lo": 0.9,
+        "hi": 1.0,
+        "acc": 0.4533333333333333,
+        "conf": 0.9907617714083384,
+        "n": 150
+      }
+    ],
+    "calibration_curve": {
+      "fraction_pos": [
+        0.0,
+        0.0,
+        0.4533333333333333
+      ],
+      "mean_predicted": [
+        0.7975350242915666,
+        0.8985993565195526,
+        0.9907617714083384
+      ]
+    }
+  },
+  "improvement": {
+    "brier_delta": 0.0018303776661171556,
+    "ece_delta": 0.00118584284669343,
+    "mce_delta": -0.08243522926574498
+  },
+  "per_fold_params": [
+    {
+      "intercept": -0.11961326830131622,
+      "slope": 1.0
+    }
+  ],
+  "mean_params": {
+    "intercept": -0.11961326830131622,
+    "slope": 1.0
+  },
+  "train_sites": [
+    "hungary",
+    "va",
+    "switzerland"
+  ],
+  "test_site": "cleveland"
+}

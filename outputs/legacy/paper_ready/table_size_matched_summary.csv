@@ -1,0 +1,11 @@
+train_sites,test_site,roc_auc_mean,roc_auc_std,ece_mean
+cleveland,switzerland,0.7544,0.0455,0.3268
+cleveland+hungary+switzerland,va,0.6977,0.0247,0.1893
+cleveland+hungary+va,switzerland,0.7448,0.0479,0.2942
+cleveland+switzerland+va,hungary,0.8299,0.0204,0.2389
+hungary,switzerland,0.7337,0.0437,0.3504
+hungary+switzerland+va,cleveland,0.8032,0.0236,0.3442
+kaggle,cleveland,0.5837,0.0389,0.2685
+kaggle,hungary,0.5888,0.0236,0.2901
+kaggle,switzerland,0.5457,0.0502,0.3961
+kaggle,va,0.5817,0.0256,0.2498
