@@ -1,0 +1,61 @@
+{
+  "experiment_type": "external_uci",
+  "model": "lr",
+  "method": "temperature",
+  "split_mode": "holdout",
+  "n_calibration": 147,
+  "n_evaluation": 147,
+  "metrics_before": {
+    "brier_score": 0.5572046800922319,
+    "ece": 0.5726366916424455,
+    "mce": 0.5726366916424455,
+    "bin_details": [
+      {
+        "lo": 0.9,
+        "hi": 1.0,
+        "acc": 0.36054421768707484,
+        "conf": 0.9331809093295204,
+        "n": 147
+      }
+    ],
+    "calibration_curve": {
+      "fraction_pos": [
+        0.36054421768707484
+      ],
+      "mean_predicted": [
+        0.93318090932952
+      ]
+    }
+  },
+  "metrics_after": {
+    "brier_score": 0.27208111171818194,
+    "ece": 0.20500737851789702,
+    "mce": 0.20500737851789702,
+    "bin_details": [
+      {
+        "lo": 0.5,
+        "hi": 0.6000000000000001,
+        "acc": 0.36054421768707484,
+        "conf": 0.5655515962049719,
+        "n": 147
+      }
+    ],
+    "calibration_curve": {
+      "fraction_pos": [
+        0.36054421768707484
+      ],
+      "mean_predicted": [
+        0.565551596204972
+      ]
+    }
+  },
+  "improvement": {
+    "brier_delta": 0.28512356837404995,
+    "ece_delta": 0.36762931312454844,
+    "mce_delta": 0.36762931312454844
+  },
+  "train_sites": [
+    "switzerland"
+  ],
+  "test_site": "hungary"
+}

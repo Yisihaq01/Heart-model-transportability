@@ -1,0 +1,18 @@
+# Pinned dependency versions for exact reproducibility.
+# Generated from a working environment on 2026-03-01 (Python 3.14).
+# To regenerate: pip install -r requirements.txt && pip freeze > requirements-pinned.txt
+# then trim to project-relevant packages.
+lightgbm==4.6.0
+Markdown==3.10.2
+matplotlib==3.10.8
+numpy==2.4.2
+pandas==2.3.3
+pyarrow==23.0.1
+PyYAML==6.0.3
+scikit-learn==1.8.0
+scipy==1.17.1
+seaborn>=0.12
+streamlit==1.54.0
+xgboost==3.2.0
+# Dev / test
+pytest==9.0.2

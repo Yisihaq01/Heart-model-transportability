@@ -1,0 +1,73 @@
+{
+  "experiment_type": "internal_cfs",
+  "variant": "cfs_plus_chol",
+  "site": "switzerland",
+  "model": "lgbm",
+  "features_used": [
+    "age",
+    "sex",
+    "sys_bp"
+  ],
+  "metrics": {
+    "n_test": 615,
+    "roc_auc": 0.5634782608695652,
+    "pr_auc": 0.9511934086288882,
+    "brier_score": 0.07922379668993275,
+    "accuracy": 0.9109999999999999,
+    "ece": 0.09235246097851349,
+    "mce": 0.42519562139865796,
+    "f1": 0.9528690326016875,
+    "precision": 0.9335640127987953,
+    "recall": 0.9739130434782609,
+    "specificity": 0.0,
+    "prevalence": 0.9353333333333331,
+    "confusion_matrix": [
+      [
+        0,
+        40
+      ],
+      [
+        15,
+        560
+      ]
+    ]
+  },
+  "bootstrap_cis": {
+    "roc_auc": {
+      "point": 0.34782608695652173,
+      "ci_lower": NaN,
+      "ci_upper": NaN
+    },
+    "pr_auc": {
+      "point": 0.8975108556061577,
+      "ci_lower": 0.7236876331610987,
+      "ci_upper": 1.0000000000000002
+    },
+    "brier_score": {
+      "point": 0.08962371978515461,
+      "ci_lower": 0.007515141188341082,
+      "ci_upper": 0.21091508319874874
+    },
+    "accuracy": {
+      "point": 0.92,
+      "ci_lower": 0.8,
+      "ci_upper": 1.0
+    },
+    "ece": {
+      "point": 0.12100129885378387,
+      "ci_lower": 0.036203508213662014,
+      "ci_upper": 0.24995879421844033
+    }
+  },
+  "best_params": {
+    "num_leaves": 63,
+    "max_depth": 7,
+    "learning_rate": 0.01
+  },
+  "cfs_penalty": {
+    "full_auc": null,
+    "cfs_auc": 0.5634782608695652,
+    "auc_drop": null,
+    "relative_drop_pct": null
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "experiment_type": "internal_cfs",
+  "variant": "cfs_plus_chol",
+  "site": "va",
+  "model": "rf",
+  "features_used": [
+    "age",
+    "sex",
+    "sys_bp",
+    "cholesterol"
+  ],
+  "metrics": {
+    "roc_auc": 0.6883333333333334,
+    "pr_auc": 0.8837650912634324,
+    "brier_score": 0.20280886068238488,
+    "accuracy": 0.7,
+    "f1": 0.7931034482758621,
+    "precision": 0.8214285714285714,
+    "recall": 0.7666666666666667,
+    "specificity": 0.5,
+    "confusion_matrix": [
+      [
+        5,
+        5
+      ],
+      [
+        7,
+        23
+      ]
+    ],
+    "n_test": 40,
+    "prevalence": 0.75,
+    "ece": 0.1986226839960476,
+    "mce": 0.3412037887079173
+  },
+  "bootstrap_cis": {
+    "roc_auc": {
+      "point": 0.6883333333333334,
+      "ci_lower": 0.47993870855383647,
+      "ci_upper": 0.8712331883911416
+    },
+    "pr_auc": {
+      "point": 0.8837650912634324,
+      "ci_lower": 0.7718151303841169,
+      "ci_upper": 0.9653677386865318
+    },
+    "brier_score": {
+      "point": 0.20280886068238488,
+      "ci_lower": 0.16133826944036012,
+      "ci_upper": 0.24788789690085836
+    },
+    "accuracy": {
+      "point": 0.7,
+      "ci_lower": 0.55,
+      "ci_upper": 0.825
+    },
+    "ece": {
+      "point": 0.1986226839960476,
+      "ci_lower": 0.15391327379000838,
+      "ci_upper": 0.3348940861245402
+    }
+  },
+  "best_params": {
+    "max_depth": 5,
+    "min_samples_leaf": 5
+  },
+  "cfs_penalty": {
+    "full_auc": 0.6666666666666667,
+    "cfs_auc": 0.6883333333333334,
+    "auc_drop": -0.021666666666666612,
+    "relative_drop_pct": -3.249999999999991
+  }
+}

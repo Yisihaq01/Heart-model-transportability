@@ -105,6 +105,20 @@ Four cohorts sharing a common 14-attribute schema: **Cleveland** (processed 14-c
 - **Shift diagnostics:** Feature distribution comparisons, drift flags, prevalence differences
 - **Reporting:** TRIPOD+AI for completeness, PROBAST+AI for bias risk assessment
 
+## Compliance & Reporting Artifacts
+
+| Artifact | Location | Description |
+|----------|----------|-------------|
+| **TRIPOD+AI Checklist** | [`reports/compliance/TRIPOD_AI_CHECKLIST.md`](reports/compliance/TRIPOD_AI_CHECKLIST.md) | 27-item checklist mapped to project files/sections |
+| **PROBAST Risk Assessment** | [`reports/compliance/PROBAST_RISK_ASSESSMENT.md`](reports/compliance/PROBAST_RISK_ASSESSMENT.md) | Domain-level bias/risk table with judgments and rationale |
+| **Evaluation Report (HTML)** | [`reports/evaluation_report.html`](reports/evaluation_report.html) | HTML version of the evaluation report (open from repo root so relative links resolve) |
+
+## Requirements
+
+- **Python 3.10+** (developed/tested on 3.14)
+- Dependencies: `pip install -r requirements.txt`
+- For exact reproducibility, use `requirements-pinned.txt` (frozen versions from a verified environment)
+
 ## Project Structure
 
 ```
@@ -126,12 +140,27 @@ Heart-model-transportability/
 ├── Research Paper/           # Manuscript drafts
 ├── src/                      # Loading, cleaning, modeling, calibration, drift, evaluation (planned)
 ├── configs/                  # Run configs: site pairs, models, seeds (planned)
-├── outputs/                  # Tables, plots, saved models (planned)
-├── reports/                  # Markdown/HTML evaluation report — TRIPOD+AI aligned (planned)
+├── outputs/                  # Experiment artifacts: results, predictions, models (see below)
+├── reports/                  # Evaluation report, compliance artifacts
+│   └── compliance/           # TRIPOD+AI checklist, PROBAST risk assessment
 ├── app/                      # Transportability Dashboard — Streamlit/Dash (planned)
 ├── requirements.txt          # (planned)
 └── README.md
 ```
+
+### Canonical output artifacts
+
+Each experiment (internal, internal_cfs, external_uci, external_kaggle_uci) writes a consistent set under `outputs/`:
+
+| File | Meaning | Required / Optional |
+|------|---------|---------------------|
+| `results.json` | Metrics, hyperparameters, CIs, metadata | **Required** |
+| `predictions.parquet` | Hold-out predictions | **Canonical** |
+| `predictions.csv` | Same as parquet; convenience | Optional |
+| `model.joblib` | Fitted estimator | When model saved |
+| `pipeline.joblib` | Fitted preprocessing pipeline | When pipeline exists |
+
+Downstream stages add calibration, size_matched, and shift artifacts. Full paths and contract details: `ImplementationPlan/pipeline_outputs.md`. For reproducible runs with manifest (config_hash, seed, code_version, artifact index), use `scripts/run_pipeline.py`; outputs go to `outputs/runs/{run_id}/`. See `outputs/README.md`.
 
 ## Deliverables
 

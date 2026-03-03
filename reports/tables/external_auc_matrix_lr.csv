@@ -1,0 +1,11 @@
+train_sites,cleveland,cleveland+hungary+switzerland+va,hungary,kaggle,switzerland,va
+cleveland,,,0.881,0.638,0.716,0.703
+cleveland+hungary+switzerland,,,,,,0.752
+cleveland+hungary+switzerland+va,,,,0.603,,
+cleveland+hungary+va,,,,,0.714,
+cleveland+va+switzerland,,,0.895,,,
+hungary,0.871,,,0.649,0.762,0.746
+hungary+va+switzerland,0.786,,,,,
+kaggle,0.617,0.609,0.606,,0.557,0.622
+switzerland,0.802,,0.859,0.648,,0.725
+va,0.786,,0.898,0.627,0.758,

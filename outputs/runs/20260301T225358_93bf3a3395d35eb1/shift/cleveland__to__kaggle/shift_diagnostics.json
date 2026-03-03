@@ -1,0 +1,15 @@
+{
+  "train_sites": [
+    "cleveland"
+  ],
+  "test_site": "kaggle",
+  "model": "xgb",
+  "experiment_type": "external_kaggle_uci",
+  "prevalence_shift": {
+    "train_prevalence": 0.45874587458745875,
+    "test_prevalence": 0.49467450455431716,
+    "absolute_diff": 0.035928629966858416
+  },
+  "mean_psi": 0.6914014779091865,
+  "c2st_auc": 0.8627318025919827
+}

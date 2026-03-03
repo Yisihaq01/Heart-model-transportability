@@ -1,0 +1,100 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Evaluation Report — Heart Disease Model Transportability</title><style>body{font-family:system-ui,sans-serif;max-width:900px;margin:2rem auto;padding:0 1rem;line-height:1.6}h1{border-bottom:1px solid #ccc}h2{margin-top:1.5em}table{border-collapse:collapse;width:100%}th,td{border:1px solid #ddd;padding:.5em .75em;text-align:left}th{background:#f5f5f5}tr:nth-child(even){background:#fafafa}code{background:#f0f0f0;padding:.15em .4em;border-radius:3px}a{color:#0066cc}</style></head><body><h1>Evaluation Report — Heart Disease Model Transportability</h1>
+<h2>1. Executive Summary</h2>
+<p><strong>RQ1 — Internal baselines:</strong> Within-site performance varied by cohort. Best models per site: cleveland (rf), cleveland+hungary+switzerland+va (rf), hungary (xgb), kaggle (lgbm), switzerland (xgb). Best internal ROC-AUC was 0.970. Small UCI cohorts (e.g. Switzerland) show wider CIs than Kaggle.</p>
+<p><strong>RQ2 — External validation:</strong> Performance dropped when models were applied across sites. Worst AUC drop observed: kaggle → cleveland (rf), Δ = -0.394. Mean AUC drop across external pairs: -0.097. External Kaggle↔UCI CFS runs do not have an internal CFS baseline on the same test site, so CFS penalty fields (cfs_full_auc, cfs_cfs_auc) are NaN for those rows.</p>
+<p><strong>RQ3 — Dataset shift:</strong> Shift diagnostics (PSI, prevalence diff, C2ST) were correlated with performance degradation. Spearman ρ (mean PSI vs AUC drop) = -0.19, p = 0.126. The correlation was not statistically significant; power was limited by the number of external pairs. Shift signatures (prevalence vs covariate vs missingness) are summarized in Results §5.</p>
+<p><strong>RQ4 — Recalibration:</strong> Recalibration (intercept-only and full logistic) significantly reduced ECE (mean ECE before 0.250, after 0.141; mean improvement 0.109; Wilcoxon p &lt; 0.001). When miscalibration is correctable, recalibration is sufficient; when feature mismatch dominates, it is not.</p>
+<p><strong>RQ5 — CFS penalty:</strong> Restricting to common features (CFS) incurred a mean AUC drop of 0.168 and maximum 0.368. Part of the Kaggle↔UCI external drop is attributable to this feature restriction; the remainder reflects population shift.</p>
+<p><strong>Headline metrics:</strong> 
+best internal AUC = 0.970; worst external drop (mean) = -0.097; recalibration recovery (mean ECE Δ) = 0.109.</p>
+<h2>2. Methods Summary</h2>
+<ul>
+<li>Data sources: Kaggle CVD, UCI Heart Disease (Cleveland, Hungary, Switzerland, VA)</li>
+<li>Models: LR, RF, XGB, LGBM</li>
+<li>Metrics: ROC-AUC, PR-AUC, Brier, ECE, MCE</li>
+<li>Statistical tests: Spearman (shift–performance), Wilcoxon (recalibration)</li>
+</ul>
+<h2>3. Results — RQ1: Internal Baselines</h2>
+<table>
+<thead>
+<tr>
+<th>Site</th>
+<th>lgbm</th>
+<th>lr</th>
+<th>rf</th>
+<th>xgb</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cleveland</td>
+<td>0.947</td>
+<td>0.963</td>
+<td>0.970</td>
+<td>0.948</td>
+</tr>
+<tr>
+<td>cleveland+hungary+switzerland+va</td>
+<td>0.706</td>
+<td>0.707</td>
+<td>0.714</td>
+<td>0.691</td>
+</tr>
+<tr>
+<td>hungary</td>
+<td>0.902</td>
+<td>0.872</td>
+<td>0.883</td>
+<td>0.904</td>
+</tr>
+<tr>
+<td>kaggle</td>
+<td>0.797</td>
+<td>0.785</td>
+<td>0.796</td>
+<td>0.796</td>
+</tr>
+<tr>
+<td>switzerland</td>
+<td>0.696</td>
+<td>0.724</td>
+<td>0.722</td>
+<td>0.759</td>
+</tr>
+<tr>
+<td>va</td>
+<td>0.647</td>
+<td>0.823</td>
+<td>0.667</td>
+<td>0.693</td>
+</tr>
+</tbody>
+</table>
+<p>Key finding: Model ranking varies by site — dominant models include cleveland (rf), cleveland+hungary+switzerland+va (rf), hungary (xgb), kaggle (lgbm), switzerland (xgb), va (lr). Small UCI cohorts show wider bootstrap CIs; Kaggle's performance is not directly comparable without size-matched sensitivity. Discrimination and calibration (Brier, ECE) are reported in the table and figures.</p>
+<h2>4. Results — RQ2: External Validation</h2>
+<p>Mean AUC drop: -0.097</p>
+<p>Key finding: Pairwise and LOSO external validation show substantial AUC drops for several train→test directions. The worst drop typically occurs for Kaggle→UCI CFS or cross-site pairs with large covariate shift.  Note: For external Kaggle↔UCI CFS experiments there is no internal CFS baseline on the same test site (UCI sites were evaluated internally with full features), so fields such as cfs_full_auc and cfs_cfs_auc are undefined (NaN) in the worst-AUC-drop summary for those rows.</p>
+<h2>5. Results — RQ3: Dataset Shift</h2>
+<p>Spearman ρ (mean PSI vs AUC drop): ρ = -0.193, p = 0.126</p>
+<p>Key finding: The shift–performance Spearman correlation (mean PSI vs AUC drop) was ρ = -0.19, p = 0.126: not statistically significant at α = 0.05. Power was limited by the number of external pairs. Shift signatures (prevalence-driven vs covariate-driven vs missingness-driven degradation) can still be inspected per pair via the PSI heatmap and distribution overlays.</p>
+<h2>6. Results — RQ4: Recalibration</h2>
+<p>Wilcoxon (ECE before vs after): mean ECE before 0.250, after 0.141, mean improvement 0.109, p = 5.806936945336855e-19</p>
+<p>Key finding: Recalibration (intercept-only and full logistic) significantly reduced ECE on average. When ECE drops to below ~0.05 after recalibration, miscalibration was correctable; when no method helps, feature-level mismatch likely dominates and recalibration is insufficient.</p>
+<h2>7. Results — RQ5: CFS Penalty</h2>
+<p>Mean CFS AUC drop: 0.168; max: 0.368</p>
+<p>Key finding: The CFS (common-feature-set) restriction incurs a mean AUC penalty of 0.168 (max 0.368). Part of the Kaggle↔UCI transportability gap is thus attributable to feature restriction; the remainder reflects population and distribution shift.</p>
+<h2>8. Discussion</h2>
+<p><strong>Transportability patterns:</strong> Performance transfer depends strongly on the train–test site pair. Same-site internal validation gives optimistically high AUC; external application to other sites or to CFS-only evaluation typically reduces discrimination. Directions that transfer relatively well can be identified from the AUC heatmap and Δ matrix; the worst degradation occurs for Kaggle→UCI CFS and for pairs with large covariate or prevalence shift.</p>
+<p><strong>Recalibration sufficiency:</strong> Recalibration (Platt, isotonic, or logistic updating) is sufficient when the dominant issue is miscalibration (e.g. prevalence shift). When ECE drops to below ~0.05 after recalibration, probability outputs can be used with confidence. When no method materially improves ECE, feature-level mismatch or population shift likely dominates, and recalibration is insufficient—retraining or feature alignment is then needed.</p>
+<p><strong>Limitations:</strong> Bootstrap CIs overlap substantially for small UCI cohorts, limiting claims about model ranking. The shift–performance correlation was underpowered (few external pairs). External Kaggle↔UCI CFS experiments do not have an internal CFS baseline on the same test site, so CFS penalty fields (cfs_full_auc, cfs_cfs_auc) are undefined (NaN) for the worst-AUC-drop summary for those rows. Univariate shift diagnostics (PSI, KS) may miss multivariate structure captured by C2ST.</p>
+<h2>9. Appendices</h2>
+<ul>
+<li>Full metric tables: reports/tables/master_results.csv</li>
+<li>Statistical tests: reports/tables/statistical_tests.json</li>
+<li>RQ summaries: reports/rq_summaries.json (structured data for reproducibility)</li>
+</ul>
+<h3>Appendix: PROBAST Risk Assessment</h3>
+<p>Domain-level bias and applicability assessment per PROBAST+AI:
+<a href="compliance/PROBAST_RISK_ASSESSMENT.md">reports/compliance/PROBAST_RISK_ASSESSMENT.md</a></p>
+<h3>Code and Data Availability</h3>
+<p>All analysis code is available in this repository. Data sources: the <a href="https://archive.ics.uci.edu/dataset/45/heart+disease">UCI Heart Disease dataset</a> (Cleveland, Hungary, Switzerland, VA) and the <a href="https://www.kaggle.com/datasets/sulianova/cardiovascular-disease-dataset">Kaggle Cardiovascular Disease dataset</a>. Both datasets are publicly available under their respective licenses.</p></body></html>

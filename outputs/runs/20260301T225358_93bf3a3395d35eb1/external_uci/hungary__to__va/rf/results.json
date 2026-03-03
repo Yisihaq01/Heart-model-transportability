@@ -1,0 +1,77 @@
+{
+  "experiment_type": "external_uci",
+  "train_sites": [
+    "hungary"
+  ],
+  "test_site": "va",
+  "model": "rf",
+  "features_used": [
+    "age",
+    "sex",
+    "cp",
+    "trestbps",
+    "chol",
+    "thalach",
+    "exang",
+    "oldpeak"
+  ],
+  "n_train": 294,
+  "n_test": 200,
+  "best_params": {
+    "max_depth": 10,
+    "min_samples_leaf": 10
+  },
+  "metrics": {
+    "roc_auc": 0.7322674036057375,
+    "pr_auc": 0.8734454914193174,
+    "brier_score": 0.18700925420040956,
+    "accuracy": 0.735,
+    "f1": 0.8215488215488216,
+    "precision": 0.8243243243243243,
+    "recall": 0.8187919463087249,
+    "specificity": 0.49019607843137253,
+    "confusion_matrix": [
+      [
+        25,
+        26
+      ],
+      [
+        27,
+        122
+      ]
+    ],
+    "n_test": 200,
+    "prevalence": 0.745,
+    "ece": 0.16266757500505602,
+    "mce": 0.35302431824679525
+  },
+  "bootstrap_cis": {
+    "roc_auc": {
+      "point": 0.7322674036057375,
+      "ci_lower": 0.6503818508535489,
+      "ci_upper": 0.805854104598205
+    },
+    "pr_auc": {
+      "point": 0.8734454914193174,
+      "ci_lower": 0.8150784678460409,
+      "ci_upper": 0.9281732395338085
+    },
+    "brier_score": {
+      "point": 0.18700925420040956,
+      "ci_lower": 0.1611888508233935,
+      "ci_upper": 0.21424307795558276
+    },
+    "accuracy": {
+      "point": 0.735,
+      "ci_lower": 0.675,
+      "ci_upper": 0.795
+    },
+    "ece": {
+      "point": 0.16266757500505602,
+      "ci_lower": 0.1185983569934428,
+      "ci_upper": 0.2194648906712058
+    }
+  },
+  "timestamp": "2026-03-01T23:02:39Z",
+  "config_hash": "93bf3a3395d35eb1"
+}

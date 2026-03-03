@@ -1,0 +1,73 @@
+{
+  "experiment_type": "internal_cfs",
+  "variant": "cfs_plus_chol",
+  "site": "cleveland+hungary+switzerland+va",
+  "model": "rf",
+  "features_used": [
+    "age",
+    "sex",
+    "sys_bp",
+    "cholesterol"
+  ],
+  "metrics": {
+    "roc_auc": 0.733082257293161,
+    "pr_auc": 0.7848478521497585,
+    "brier_score": 0.21170154116272843,
+    "accuracy": 0.6521739130434783,
+    "f1": 0.6862745098039216,
+    "precision": 0.6862745098039216,
+    "recall": 0.6862745098039216,
+    "specificity": 0.6097560975609756,
+    "confusion_matrix": [
+      [
+        50,
+        32
+      ],
+      [
+        32,
+        70
+      ]
+    ],
+    "n_test": 184,
+    "prevalence": 0.5543478260869565,
+    "ece": 0.11130783062387323,
+    "mce": 0.2360748240242545
+  },
+  "bootstrap_cis": {
+    "roc_auc": {
+      "point": 0.733082257293161,
+      "ci_lower": 0.6589355034344291,
+      "ci_upper": 0.8045765809223672
+    },
+    "pr_auc": {
+      "point": 0.7848478521497585,
+      "ci_lower": 0.710945874999411,
+      "ci_upper": 0.8516093087257219
+    },
+    "brier_score": {
+      "point": 0.21170154116272843,
+      "ci_lower": 0.1864497409611171,
+      "ci_upper": 0.23596973088843287
+    },
+    "accuracy": {
+      "point": 0.6521739130434783,
+      "ci_lower": 0.5869565217391305,
+      "ci_upper": 0.7202445652173911
+    },
+    "ece": {
+      "point": 0.11130783062387323,
+      "ci_lower": 0.07331460014921198,
+      "ci_upper": 0.1795464791946255
+    }
+  },
+  "best_params": {
+    "max_depth": 5,
+    "min_samples_leaf": 10
+  },
+  "cfs_penalty": {
+    "full_auc": null,
+    "cfs_auc": 0.733082257293161,
+    "auc_drop": null,
+    "relative_drop_pct": null
+  }
+}

@@ -337,7 +337,7 @@ class TestPipelinePlanIntegration:
 
 
 class TestStageC3ArtifactSerialization:
-    """Stage C.3 — Artifact serialization: save_experiment writes results.json, predictions.parquet, model.joblib, pipeline.joblib."""
+    """Stage C.3 — Artifact serialization: save_experiment writes results.json, predictions.parquet, predictions.csv, model.joblib, pipeline.joblib."""
 
     def test_internal_experiment_creates_expected_files(self):
         from sklearn.linear_model import LogisticRegression
@@ -357,6 +357,7 @@ class TestStageC3ArtifactSerialization:
             path = save_experiment(result, base_dir=tmp)
             assert (path / "results.json").exists()
             assert (path / "predictions.parquet").exists()
+            assert (path / "predictions.csv").exists()
             assert (path / "model.joblib").exists()
             assert (path / "pipeline.joblib").exists()
             assert path == Path(tmp) / "internal" / "cleveland" / "lr"
@@ -374,6 +375,7 @@ class TestStageC3ArtifactSerialization:
             path = save_experiment(result, base_dir=tmp)
             assert (path / "results.json").exists()
             assert (path / "predictions.parquet").exists()
+            assert (path / "predictions.csv").exists()
             assert "cleveland+hungary" in str(path) and "va" in str(path)
             assert path == Path(tmp) / "external_uci" / "cleveland+hungary__to__va" / "rf"
 
@@ -390,6 +392,7 @@ class TestStageC3ArtifactSerialization:
             path = save_experiment(result, base_dir=tmp)
             assert (path / "results.json").exists()
             assert (path / "predictions.parquet").exists()
+            assert (path / "predictions.csv").exists()
             assert "kaggle__to__cleveland" in str(path)
 
     def test_results_json_excludes_predictions_and_fitted_objects(self):

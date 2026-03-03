@@ -1,0 +1,4 @@
+feature,type,test,statistic,p_value,psi,train_miss_pct,test_miss_pct,diff_pct
+age,continuous,ks,0.136742,0.000022,1.413782,0.000000,0.000000,0.000000
+sex,categorical,chi2,144.004678,0.000000,0.000000,0.000000,0.000000,0.000000
+sys_bp,continuous,ks,0.268248,0.000000,0.660422,0.000000,0.000000,0.000000

@@ -1,0 +1,61 @@
+{
+  "experiment_type": "external_uci",
+  "model": "lr",
+  "method": "platt",
+  "split_mode": "holdout",
+  "n_calibration": 100,
+  "n_evaluation": 100,
+  "metrics_before": {
+    "brier_score": 0.30774015548208444,
+    "ece": 0.28435977042258276,
+    "mce": 0.28435977042258276,
+    "bin_details": [
+      {
+        "lo": 0.9,
+        "hi": 1.0,
+        "acc": 0.65,
+        "conf": 0.9343597704225828,
+        "n": 100
+      }
+    ],
+    "calibration_curve": {
+      "fraction_pos": [
+        0.65
+      ],
+      "mean_predicted": [
+        0.9343597704225828
+      ]
+    }
+  },
+  "metrics_after": {
+    "brier_score": 0.2635980782542174,
+    "ece": 0.18999852166180686,
+    "mce": 0.18999852166180686,
+    "bin_details": [
+      {
+        "lo": 0.8,
+        "hi": 0.9,
+        "acc": 0.65,
+        "conf": 0.8399985216618069,
+        "n": 100
+      }
+    ],
+    "calibration_curve": {
+      "fraction_pos": [
+        0.65
+      ],
+      "mean_predicted": [
+        0.8399985216618064
+      ]
+    }
+  },
+  "improvement": {
+    "brier_delta": 0.04414207722786706,
+    "ece_delta": 0.0943612487607759,
+    "mce_delta": 0.0943612487607759
+  },
+  "train_sites": [
+    "switzerland"
+  ],
+  "test_site": "va"
+}

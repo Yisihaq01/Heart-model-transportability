@@ -1,0 +1,71 @@
+{
+  "experiment_type": "external_kaggle_uci",
+  "variant": "cfs",
+  "train_site": "kaggle",
+  "test_site": "switzerland",
+  "model": "xgb",
+  "features_used": [
+    "age",
+    "sex",
+    "sys_bp"
+  ],
+  "include_cholesterol": false,
+  "n_train": 68726,
+  "n_test": 123,
+  "best_params": {
+    "subsample": 1.0,
+    "max_depth": 3,
+    "learning_rate": 0.05
+  },
+  "metrics": {
+    "roc_auc": 0.541304347826087,
+    "pr_auc": 0.9379721823694294,
+    "brier_score": 0.2937718331813812,
+    "accuracy": 0.5609756097560976,
+    "f1": 0.7065217391304348,
+    "precision": 0.9420289855072463,
+    "recall": 0.5652173913043478,
+    "specificity": 0.5,
+    "confusion_matrix": [
+      [
+        4,
+        4
+      ],
+      [
+        50,
+        65
+      ]
+    ],
+    "n_test": 123,
+    "prevalence": 0.9349593495934959,
+    "ece": 0.39785086502873795,
+    "mce": 0.8437059462070465
+  },
+  "bootstrap_cis": {
+    "roc_auc": {
+      "point": 0.541304347826087,
+      "ci_lower": 0.24215793773649807,
+      "ci_upper": 0.7729878917378917
+    },
+    "pr_auc": {
+      "point": 0.9379721823694294,
+      "ci_lower": 0.8597472982161861,
+      "ci_upper": 0.9862495879461218
+    },
+    "brier_score": {
+      "point": 0.2937718331813812,
+      "ci_lower": 0.2500070434063673,
+      "ci_upper": 0.3458417601883411
+    },
+    "accuracy": {
+      "point": 0.5609756097560976,
+      "ci_lower": 0.4634146341463415,
+      "ci_upper": 0.6341463414634146
+    },
+    "ece": {
+      "point": 0.39785086502873795,
+      "ci_lower": 0.33529520349773934,
+      "ci_upper": 0.4600813006437043
+    }
+  }
+}

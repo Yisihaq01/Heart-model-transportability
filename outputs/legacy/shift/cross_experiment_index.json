@@ -1,0 +1,1965 @@
+{
+  "pairs": [
+    {
+      "pair_key": "cleveland+hungary+switzerland__to__va",
+      "train_sites": [
+        "cleveland",
+        "hungary",
+        "switzerland"
+      ],
+      "test_site": "va",
+      "model": "lgbm",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland+hungary+switzerland__to__va",
+      "train_sites": [
+        "cleveland",
+        "hungary",
+        "switzerland"
+      ],
+      "test_site": "va",
+      "model": "lr",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland+hungary+switzerland__to__va",
+      "train_sites": [
+        "cleveland",
+        "hungary",
+        "switzerland"
+      ],
+      "test_site": "va",
+      "model": "rf",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland+hungary+switzerland__to__va",
+      "train_sites": [
+        "cleveland",
+        "hungary",
+        "switzerland"
+      ],
+      "test_site": "va",
+      "model": "xgb",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland+hungary+va__to__switzerland",
+      "train_sites": [
+        "cleveland",
+        "hungary",
+        "va"
+      ],
+      "test_site": "switzerland",
+      "model": "lgbm",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland+hungary+va__to__switzerland",
+      "train_sites": [
+        "cleveland",
+        "hungary",
+        "va"
+      ],
+      "test_site": "switzerland",
+      "model": "lr",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland+hungary+va__to__switzerland",
+      "train_sites": [
+        "cleveland",
+        "hungary",
+        "va"
+      ],
+      "test_site": "switzerland",
+      "model": "rf",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland+hungary+va__to__switzerland",
+      "train_sites": [
+        "cleveland",
+        "hungary",
+        "va"
+      ],
+      "test_site": "switzerland",
+      "model": "xgb",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland+switzerland+va__to__hungary",
+      "train_sites": [
+        "cleveland",
+        "va",
+        "switzerland"
+      ],
+      "test_site": "hungary",
+      "model": "lgbm",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland+switzerland+va__to__hungary",
+      "train_sites": [
+        "cleveland",
+        "va",
+        "switzerland"
+      ],
+      "test_site": "hungary",
+      "model": "lr",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland+switzerland+va__to__hungary",
+      "train_sites": [
+        "cleveland",
+        "va",
+        "switzerland"
+      ],
+      "test_site": "hungary",
+      "model": "rf",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland+switzerland+va__to__hungary",
+      "train_sites": [
+        "cleveland",
+        "va",
+        "switzerland"
+      ],
+      "test_site": "hungary",
+      "model": "xgb",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland__to__hungary",
+      "train_sites": [
+        "cleveland"
+      ],
+      "test_site": "hungary",
+      "model": "lgbm",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland__to__hungary",
+      "train_sites": [
+        "cleveland"
+      ],
+      "test_site": "hungary",
+      "model": "lr",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland__to__hungary",
+      "train_sites": [
+        "cleveland"
+      ],
+      "test_site": "hungary",
+      "model": "rf",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland__to__hungary",
+      "train_sites": [
+        "cleveland"
+      ],
+      "test_site": "hungary",
+      "model": "xgb",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland__to__switzerland",
+      "train_sites": [
+        "cleveland"
+      ],
+      "test_site": "switzerland",
+      "model": "lgbm",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland__to__switzerland",
+      "train_sites": [
+        "cleveland"
+      ],
+      "test_site": "switzerland",
+      "model": "lr",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland__to__switzerland",
+      "train_sites": [
+        "cleveland"
+      ],
+      "test_site": "switzerland",
+      "model": "rf",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland__to__switzerland",
+      "train_sites": [
+        "cleveland"
+      ],
+      "test_site": "switzerland",
+      "model": "xgb",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland__to__va",
+      "train_sites": [
+        "cleveland"
+      ],
+      "test_site": "va",
+      "model": "lgbm",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland__to__va",
+      "train_sites": [
+        "cleveland"
+      ],
+      "test_site": "va",
+      "model": "lr",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland__to__va",
+      "train_sites": [
+        "cleveland"
+      ],
+      "test_site": "va",
+      "model": "rf",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland__to__va",
+      "train_sites": [
+        "cleveland"
+      ],
+      "test_site": "va",
+      "model": "xgb",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "hungary+switzerland+va__to__cleveland",
+      "train_sites": [
+        "hungary",
+        "va",
+        "switzerland"
+      ],
+      "test_site": "cleveland",
+      "model": "lgbm",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "hungary+switzerland+va__to__cleveland",
+      "train_sites": [
+        "hungary",
+        "va",
+        "switzerland"
+      ],
+      "test_site": "cleveland",
+      "model": "lr",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "hungary+switzerland+va__to__cleveland",
+      "train_sites": [
+        "hungary",
+        "va",
+        "switzerland"
+      ],
+      "test_site": "cleveland",
+      "model": "rf",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "hungary+switzerland+va__to__cleveland",
+      "train_sites": [
+        "hungary",
+        "va",
+        "switzerland"
+      ],
+      "test_site": "cleveland",
+      "model": "xgb",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "hungary__to__cleveland",
+      "train_sites": [
+        "hungary"
+      ],
+      "test_site": "cleveland",
+      "model": "lgbm",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "hungary__to__cleveland",
+      "train_sites": [
+        "hungary"
+      ],
+      "test_site": "cleveland",
+      "model": "lr",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "hungary__to__cleveland",
+      "train_sites": [
+        "hungary"
+      ],
+      "test_site": "cleveland",
+      "model": "rf",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "hungary__to__cleveland",
+      "train_sites": [
+        "hungary"
+      ],
+      "test_site": "cleveland",
+      "model": "xgb",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "hungary__to__switzerland",
+      "train_sites": [
+        "hungary"
+      ],
+      "test_site": "switzerland",
+      "model": "lgbm",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "hungary__to__switzerland",
+      "train_sites": [
+        "hungary"
+      ],
+      "test_site": "switzerland",
+      "model": "lr",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "hungary__to__switzerland",
+      "train_sites": [
+        "hungary"
+      ],
+      "test_site": "switzerland",
+      "model": "rf",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "hungary__to__switzerland",
+      "train_sites": [
+        "hungary"
+      ],
+      "test_site": "switzerland",
+      "model": "xgb",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "hungary__to__va",
+      "train_sites": [
+        "hungary"
+      ],
+      "test_site": "va",
+      "model": "lgbm",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "hungary__to__va",
+      "train_sites": [
+        "hungary"
+      ],
+      "test_site": "va",
+      "model": "lr",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "hungary__to__va",
+      "train_sites": [
+        "hungary"
+      ],
+      "test_site": "va",
+      "model": "rf",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "hungary__to__va",
+      "train_sites": [
+        "hungary"
+      ],
+      "test_site": "va",
+      "model": "xgb",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "switzerland__to__cleveland",
+      "train_sites": [
+        "switzerland"
+      ],
+      "test_site": "cleveland",
+      "model": "lgbm",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "switzerland__to__cleveland",
+      "train_sites": [
+        "switzerland"
+      ],
+      "test_site": "cleveland",
+      "model": "lr",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "switzerland__to__cleveland",
+      "train_sites": [
+        "switzerland"
+      ],
+      "test_site": "cleveland",
+      "model": "rf",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "switzerland__to__cleveland",
+      "train_sites": [
+        "switzerland"
+      ],
+      "test_site": "cleveland",
+      "model": "xgb",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "switzerland__to__hungary",
+      "train_sites": [
+        "switzerland"
+      ],
+      "test_site": "hungary",
+      "model": "lgbm",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "switzerland__to__hungary",
+      "train_sites": [
+        "switzerland"
+      ],
+      "test_site": "hungary",
+      "model": "lr",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "switzerland__to__hungary",
+      "train_sites": [
+        "switzerland"
+      ],
+      "test_site": "hungary",
+      "model": "rf",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "switzerland__to__hungary",
+      "train_sites": [
+        "switzerland"
+      ],
+      "test_site": "hungary",
+      "model": "xgb",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "switzerland__to__va",
+      "train_sites": [
+        "switzerland"
+      ],
+      "test_site": "va",
+      "model": "lgbm",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "switzerland__to__va",
+      "train_sites": [
+        "switzerland"
+      ],
+      "test_site": "va",
+      "model": "lr",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "switzerland__to__va",
+      "train_sites": [
+        "switzerland"
+      ],
+      "test_site": "va",
+      "model": "rf",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "switzerland__to__va",
+      "train_sites": [
+        "switzerland"
+      ],
+      "test_site": "va",
+      "model": "xgb",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "va__to__cleveland",
+      "train_sites": [
+        "va"
+      ],
+      "test_site": "cleveland",
+      "model": "lgbm",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "va__to__cleveland",
+      "train_sites": [
+        "va"
+      ],
+      "test_site": "cleveland",
+      "model": "lr",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "va__to__cleveland",
+      "train_sites": [
+        "va"
+      ],
+      "test_site": "cleveland",
+      "model": "rf",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "va__to__cleveland",
+      "train_sites": [
+        "va"
+      ],
+      "test_site": "cleveland",
+      "model": "xgb",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "va__to__hungary",
+      "train_sites": [
+        "va"
+      ],
+      "test_site": "hungary",
+      "model": "lgbm",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "va__to__hungary",
+      "train_sites": [
+        "va"
+      ],
+      "test_site": "hungary",
+      "model": "lr",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "va__to__hungary",
+      "train_sites": [
+        "va"
+      ],
+      "test_site": "hungary",
+      "model": "rf",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "va__to__hungary",
+      "train_sites": [
+        "va"
+      ],
+      "test_site": "hungary",
+      "model": "xgb",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "va__to__switzerland",
+      "train_sites": [
+        "va"
+      ],
+      "test_site": "switzerland",
+      "model": "lgbm",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "va__to__switzerland",
+      "train_sites": [
+        "va"
+      ],
+      "test_site": "switzerland",
+      "model": "lr",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "va__to__switzerland",
+      "train_sites": [
+        "va"
+      ],
+      "test_site": "switzerland",
+      "model": "rf",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "va__to__switzerland",
+      "train_sites": [
+        "va"
+      ],
+      "test_site": "switzerland",
+      "model": "xgb",
+      "experiment_type": "external_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland+hungary+switzerland+va__to__kaggle",
+      "train_sites": [
+        "cleveland",
+        "hungary",
+        "switzerland",
+        "va"
+      ],
+      "test_site": "kaggle",
+      "model": "lgbm",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland+hungary+switzerland+va__to__kaggle",
+      "train_sites": [
+        "cleveland",
+        "hungary",
+        "switzerland",
+        "va"
+      ],
+      "test_site": "kaggle",
+      "model": "lr",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland+hungary+switzerland+va__to__kaggle",
+      "train_sites": [
+        "cleveland",
+        "hungary",
+        "switzerland",
+        "va"
+      ],
+      "test_site": "kaggle",
+      "model": "rf",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland+hungary+switzerland+va__to__kaggle",
+      "train_sites": [
+        "cleveland",
+        "hungary",
+        "switzerland",
+        "va"
+      ],
+      "test_site": "kaggle",
+      "model": "xgb",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland__to__kaggle",
+      "train_sites": [
+        "cleveland"
+      ],
+      "test_site": "kaggle",
+      "model": "lgbm",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland__to__kaggle",
+      "train_sites": [
+        "cleveland"
+      ],
+      "test_site": "kaggle",
+      "model": "lr",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland__to__kaggle",
+      "train_sites": [
+        "cleveland"
+      ],
+      "test_site": "kaggle",
+      "model": "rf",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland__to__kaggle",
+      "train_sites": [
+        "cleveland"
+      ],
+      "test_site": "kaggle",
+      "model": "xgb",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "hungary__to__kaggle",
+      "train_sites": [
+        "hungary"
+      ],
+      "test_site": "kaggle",
+      "model": "lgbm",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "hungary__to__kaggle",
+      "train_sites": [
+        "hungary"
+      ],
+      "test_site": "kaggle",
+      "model": "lr",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "hungary__to__kaggle",
+      "train_sites": [
+        "hungary"
+      ],
+      "test_site": "kaggle",
+      "model": "rf",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "hungary__to__kaggle",
+      "train_sites": [
+        "hungary"
+      ],
+      "test_site": "kaggle",
+      "model": "xgb",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "kaggle__to__cleveland",
+      "train_sites": [
+        "kaggle"
+      ],
+      "test_site": "cleveland",
+      "model": "lgbm",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "kaggle__to__cleveland",
+      "train_sites": [
+        "kaggle"
+      ],
+      "test_site": "cleveland",
+      "model": "lr",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "kaggle__to__cleveland",
+      "train_sites": [
+        "kaggle"
+      ],
+      "test_site": "cleveland",
+      "model": "rf",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "kaggle__to__cleveland",
+      "train_sites": [
+        "kaggle"
+      ],
+      "test_site": "cleveland",
+      "model": "xgb",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "kaggle__to__hungary",
+      "train_sites": [
+        "kaggle"
+      ],
+      "test_site": "hungary",
+      "model": "lgbm",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "kaggle__to__hungary",
+      "train_sites": [
+        "kaggle"
+      ],
+      "test_site": "hungary",
+      "model": "lr",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "kaggle__to__hungary",
+      "train_sites": [
+        "kaggle"
+      ],
+      "test_site": "hungary",
+      "model": "rf",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "kaggle__to__hungary",
+      "train_sites": [
+        "kaggle"
+      ],
+      "test_site": "hungary",
+      "model": "xgb",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "kaggle__to__switzerland",
+      "train_sites": [
+        "kaggle"
+      ],
+      "test_site": "switzerland",
+      "model": "lgbm",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "kaggle__to__switzerland",
+      "train_sites": [
+        "kaggle"
+      ],
+      "test_site": "switzerland",
+      "model": "lr",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "kaggle__to__switzerland",
+      "train_sites": [
+        "kaggle"
+      ],
+      "test_site": "switzerland",
+      "model": "rf",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "kaggle__to__switzerland",
+      "train_sites": [
+        "kaggle"
+      ],
+      "test_site": "switzerland",
+      "model": "xgb",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "kaggle__to__va",
+      "train_sites": [
+        "kaggle"
+      ],
+      "test_site": "va",
+      "model": "lgbm",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "kaggle__to__va",
+      "train_sites": [
+        "kaggle"
+      ],
+      "test_site": "va",
+      "model": "lr",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "kaggle__to__va",
+      "train_sites": [
+        "kaggle"
+      ],
+      "test_site": "va",
+      "model": "rf",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "kaggle__to__va",
+      "train_sites": [
+        "kaggle"
+      ],
+      "test_site": "va",
+      "model": "xgb",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "switzerland__to__kaggle",
+      "train_sites": [
+        "switzerland"
+      ],
+      "test_site": "kaggle",
+      "model": "lgbm",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "switzerland__to__kaggle",
+      "train_sites": [
+        "switzerland"
+      ],
+      "test_site": "kaggle",
+      "model": "lr",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "switzerland__to__kaggle",
+      "train_sites": [
+        "switzerland"
+      ],
+      "test_site": "kaggle",
+      "model": "rf",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "switzerland__to__kaggle",
+      "train_sites": [
+        "switzerland"
+      ],
+      "test_site": "kaggle",
+      "model": "xgb",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "va__to__kaggle",
+      "train_sites": [
+        "va"
+      ],
+      "test_site": "kaggle",
+      "model": "lgbm",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "va__to__kaggle",
+      "train_sites": [
+        "va"
+      ],
+      "test_site": "kaggle",
+      "model": "lr",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "va__to__kaggle",
+      "train_sites": [
+        "va"
+      ],
+      "test_site": "kaggle",
+      "model": "rf",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "va__to__kaggle",
+      "train_sites": [
+        "va"
+      ],
+      "test_site": "kaggle",
+      "model": "xgb",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland+hungary+switzerland+va__to__kaggle",
+      "train_sites": [
+        "cleveland",
+        "hungary",
+        "switzerland",
+        "va"
+      ],
+      "test_site": "kaggle",
+      "model": "lgbm",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland+hungary+switzerland+va__to__kaggle",
+      "train_sites": [
+        "cleveland",
+        "hungary",
+        "switzerland",
+        "va"
+      ],
+      "test_site": "kaggle",
+      "model": "lr",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland+hungary+switzerland+va__to__kaggle",
+      "train_sites": [
+        "cleveland",
+        "hungary",
+        "switzerland",
+        "va"
+      ],
+      "test_site": "kaggle",
+      "model": "rf",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland+hungary+switzerland+va__to__kaggle",
+      "train_sites": [
+        "cleveland",
+        "hungary",
+        "switzerland",
+        "va"
+      ],
+      "test_site": "kaggle",
+      "model": "xgb",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland__to__kaggle",
+      "train_sites": [
+        "cleveland"
+      ],
+      "test_site": "kaggle",
+      "model": "lgbm",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland__to__kaggle",
+      "train_sites": [
+        "cleveland"
+      ],
+      "test_site": "kaggle",
+      "model": "lr",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland__to__kaggle",
+      "train_sites": [
+        "cleveland"
+      ],
+      "test_site": "kaggle",
+      "model": "rf",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "cleveland__to__kaggle",
+      "train_sites": [
+        "cleveland"
+      ],
+      "test_site": "kaggle",
+      "model": "xgb",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "hungary__to__kaggle",
+      "train_sites": [
+        "hungary"
+      ],
+      "test_site": "kaggle",
+      "model": "lgbm",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "hungary__to__kaggle",
+      "train_sites": [
+        "hungary"
+      ],
+      "test_site": "kaggle",
+      "model": "lr",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "hungary__to__kaggle",
+      "train_sites": [
+        "hungary"
+      ],
+      "test_site": "kaggle",
+      "model": "rf",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "hungary__to__kaggle",
+      "train_sites": [
+        "hungary"
+      ],
+      "test_site": "kaggle",
+      "model": "xgb",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "kaggle__to__cleveland",
+      "train_sites": [
+        "kaggle"
+      ],
+      "test_site": "cleveland",
+      "model": "lgbm",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "kaggle__to__cleveland",
+      "train_sites": [
+        "kaggle"
+      ],
+      "test_site": "cleveland",
+      "model": "lr",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "kaggle__to__cleveland",
+      "train_sites": [
+        "kaggle"
+      ],
+      "test_site": "cleveland",
+      "model": "rf",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "kaggle__to__cleveland",
+      "train_sites": [
+        "kaggle"
+      ],
+      "test_site": "cleveland",
+      "model": "xgb",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "kaggle__to__hungary",
+      "train_sites": [
+        "kaggle"
+      ],
+      "test_site": "hungary",
+      "model": "lgbm",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "kaggle__to__hungary",
+      "train_sites": [
+        "kaggle"
+      ],
+      "test_site": "hungary",
+      "model": "lr",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "kaggle__to__hungary",
+      "train_sites": [
+        "kaggle"
+      ],
+      "test_site": "hungary",
+      "model": "rf",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "kaggle__to__hungary",
+      "train_sites": [
+        "kaggle"
+      ],
+      "test_site": "hungary",
+      "model": "xgb",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "kaggle__to__switzerland",
+      "train_sites": [
+        "kaggle"
+      ],
+      "test_site": "switzerland",
+      "model": "lgbm",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "kaggle__to__switzerland",
+      "train_sites": [
+        "kaggle"
+      ],
+      "test_site": "switzerland",
+      "model": "lr",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "kaggle__to__switzerland",
+      "train_sites": [
+        "kaggle"
+      ],
+      "test_site": "switzerland",
+      "model": "rf",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "kaggle__to__switzerland",
+      "train_sites": [
+        "kaggle"
+      ],
+      "test_site": "switzerland",
+      "model": "xgb",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "kaggle__to__va",
+      "train_sites": [
+        "kaggle"
+      ],
+      "test_site": "va",
+      "model": "lgbm",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "kaggle__to__va",
+      "train_sites": [
+        "kaggle"
+      ],
+      "test_site": "va",
+      "model": "lr",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "kaggle__to__va",
+      "train_sites": [
+        "kaggle"
+      ],
+      "test_site": "va",
+      "model": "rf",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "kaggle__to__va",
+      "train_sites": [
+        "kaggle"
+      ],
+      "test_site": "va",
+      "model": "xgb",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "switzerland__to__kaggle",
+      "train_sites": [
+        "switzerland"
+      ],
+      "test_site": "kaggle",
+      "model": "lgbm",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "switzerland__to__kaggle",
+      "train_sites": [
+        "switzerland"
+      ],
+      "test_site": "kaggle",
+      "model": "lr",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "switzerland__to__kaggle",
+      "train_sites": [
+        "switzerland"
+      ],
+      "test_site": "kaggle",
+      "model": "rf",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "switzerland__to__kaggle",
+      "train_sites": [
+        "switzerland"
+      ],
+      "test_site": "kaggle",
+      "model": "xgb",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "va__to__kaggle",
+      "train_sites": [
+        "va"
+      ],
+      "test_site": "kaggle",
+      "model": "lgbm",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "va__to__kaggle",
+      "train_sites": [
+        "va"
+      ],
+      "test_site": "kaggle",
+      "model": "lr",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "va__to__kaggle",
+      "train_sites": [
+        "va"
+      ],
+      "test_site": "kaggle",
+      "model": "rf",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    },
+    {
+      "pair_key": "va__to__kaggle",
+      "train_sites": [
+        "va"
+      ],
+      "test_site": "kaggle",
+      "model": "xgb",
+      "experiment_type": "external_kaggle_uci",
+      "paths": {
+        "shift_diagnostics": "shift_diagnostics.json",
+        "feature_shift_parquet": "feature_shift.parquet",
+        "feature_shift_csv": "feature_shift.csv"
+      }
+    }
+  ],
+  "note": "Per-pair paths are relative to outputs/shift/{pair_key}/"
+}

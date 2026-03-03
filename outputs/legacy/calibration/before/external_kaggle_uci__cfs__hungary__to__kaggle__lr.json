@@ -1,0 +1,35 @@
+{
+  "experiment_type": "external_kaggle_uci",
+  "model": "lr",
+  "calibration_metrics": {
+    "brier_score": 0.2667120905431792,
+    "ece": 0.1390730297192866,
+    "mce": 0.1390730297192866,
+    "bin_details": [
+      {
+        "lo": 0.30000000000000004,
+        "hi": 0.4,
+        "acc": 0.49467450455431716,
+        "conf": 0.3556014748350306,
+        "n": 68726
+      }
+    ],
+    "calibration_curve": {
+      "fraction_pos": [
+        0.49467450455431716
+      ],
+      "mean_predicted": [
+        0.3556014748350191
+      ]
+    }
+  },
+  "n": 68726,
+  "train_site": "hungary",
+  "test_site": "kaggle",
+  "variant": "cfs",
+  "flags": {
+    "ece_moderate": true,
+    "ece_severe": true,
+    "mce_large": false
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "experiment_type": "internal",
+  "model": "lr",
+  "calibration_metrics": {
+    "brier_score": 0.1838938103371477,
+    "ece": 0.005056643611123901,
+    "mce": 0.005056643611123901,
+    "bin_details": [
+      {
+        "lo": 0.7000000000000001,
+        "hi": 0.8,
+        "acc": 0.75,
+        "conf": 0.7449433563888761,
+        "n": 40
+      }
+    ],
+    "calibration_curve": {
+      "fraction_pos": [
+        0.75
+      ],
+      "mean_predicted": [
+        0.7449433563888762
+      ]
+    }
+  },
+  "n": 40,
+  "site": "va",
+  "flags": {
+    "ece_moderate": false,
+    "ece_severe": false,
+    "mce_large": false
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "experiment_type": "external_uci",
+  "model": "lr",
+  "method": "platt",
+  "split_mode": "holdout",
+  "n_calibration": 151,
+  "n_evaluation": 152,
+  "metrics_before": {
+    "brier_score": 0.4829175221017871,
+    "ece": 0.4864416431812253,
+    "mce": 0.48644164318122535,
+    "bin_details": [
+      {
+        "lo": 0.9,
+        "hi": 1.0,
+        "acc": 0.4473684210526316,
+        "conf": 0.9338100642338569,
+        "n": 152
+      }
+    ],
+    "calibration_curve": {
+      "fraction_pos": [
+        0.4473684210526316
+      ],
+      "mean_predicted": [
+        0.933810064233857
+      ]
+    }
+  },
+  "metrics_after": {
+    "brier_score": 0.24772813641345084,
+    "ece": 0.022777498073645375,
+    "mce": 0.022777498073645375,
+    "bin_details": [
+      {
+        "lo": 0.4,
+        "hi": 0.5,
+        "acc": 0.4473684210526316,
+        "conf": 0.47014591912627696,
+        "n": 152
+      }
+    ],
+    "calibration_curve": {
+      "fraction_pos": [
+        0.4473684210526316
+      ],
+      "mean_predicted": [
+        0.47014591912627696
+      ]
+    }
+  },
+  "improvement": {
+    "brier_delta": 0.23518938568833628,
+    "ece_delta": 0.4636641451075799,
+    "mce_delta": 0.46366414510758
+  },
+  "train_sites": [
+    "switzerland"
+  ],
+  "test_site": "cleveland"
+}
