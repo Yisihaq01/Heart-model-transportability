@@ -1,0 +1,11 @@
+services:
+  heart-model:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: heart-model-transportability:latest
+    container_name: heart-model-transportability
+    command: ["python", "scripts/run_pipeline.py", "--quick"]
+    volumes:
+      - ./outputs:/app/outputs
+      - ./reports:/app/reports
